@@ -54,3 +54,5 @@ docs/_build/
 target/
 *.py~
 *.rst~
+atlassian-ide-plugin.xml
+.idea/workspace.xml
