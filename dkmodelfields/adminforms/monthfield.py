@@ -18,8 +18,13 @@ class MonthInput(TextInput):
             value = u''
         final_attrs = self.build_attrs(attrs, type='month', name=name)
         if value != u'':
-            #if isinstance(value, (int, long)):
-            #    value = ttcal.Month(value)
+            if isinstance(value, (int, long)):
+               value = ttcal.Month(value)
+            if isinstance(value, unicode):
+                parts = value.split('-')
+                y = int(parts[0], 10)
+                m = int(parts[1], 10)
+                value = ttcal.Month(y, m)
             assert isinstance(value, ttcal.Month), type(value)
             final_attrs['value'] = unicode(value.format("Y-m"))
         return mark_safe(u'<input%s />' % flatatt(final_attrs))
