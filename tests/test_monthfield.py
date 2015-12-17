@@ -78,7 +78,6 @@ def test_get_db_prep_save():
 
 def test_formfield():
     mf = MonthField()
-    print "DIR: ", dir(mf.formfield())
     assert isinstance(mf.formfield(), adminforms.monthfield.MonthField)
 
 
