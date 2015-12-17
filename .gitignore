@@ -56,3 +56,6 @@ target/
 *.rst~
 atlassian-ide-plugin.xml
 .idea/workspace.xml
+
+
+.md5
