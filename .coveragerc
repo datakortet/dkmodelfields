@@ -26,6 +26,7 @@ omit =
     runtests.py
     setup.py
     tests/conftest.py
+    docs/*
 
 ignore_errors = True
 
