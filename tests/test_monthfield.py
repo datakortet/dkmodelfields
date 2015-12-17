@@ -28,8 +28,8 @@ def test_get_prep_value():
 
 def test_get_prep_lookup():
     mf = MonthField()
-    assert mf.get_prep_lookup('year', '2016') == ['2016-01-01 00:00:00', '2016-12-31 23:59:59.999999']
-    assert mf.get_prep_lookup('year', ttcal.Year(2016)) == ['2016-01-01 00:00:00', '2016-12-31 23:59:59.999999']
+    assert mf.get_prep_lookup('year', '2016') == ['2016-01-01', '2016-12-31 23:59:59.999999']
+    assert mf.get_prep_lookup('year', ttcal.Year(2016)) == ['2016-01-01', '2016-12-31 23:59:59.999999']
     assert mf.get_prep_lookup('month', ttcal.Month(2016, 4)) == [u'2016-04']
 
     with pytest.raises(ValueError):
@@ -47,12 +47,12 @@ def test_get_db_prep_value():
 
 def test_get_db_prep_lookup():
     mf = MonthField()
-    assert mf.get_db_prep_lookup('year', '2016', connection) == ['2016-01-01 00:00:00', '2016-12-31 23:59:59.999999']
-    assert mf.get_db_prep_lookup('year', ttcal.Year(2016), connection) == ['2016-01-01 00:00:00', '2016-12-31 23:59:59.999999']
+    assert mf.get_db_prep_lookup('year', '2016', connection) == ['2016-01-01', '2016-12-31 23:59:59.999999']
+    assert mf.get_db_prep_lookup('year', ttcal.Year(2016), connection) == ['2016-01-01', '2016-12-31 23:59:59.999999']
     assert mf.get_db_prep_lookup('month', ttcal.Month(2016, 4), connection) == [u'2016-04']
 
     with pytest.raises(ValueError):
-        mf.get_db_prep_lookup('year', 'XX', None) == ValueError
+        assert mf.get_db_prep_lookup('year', 'XX', None) == ValueError
 
 
 def test_to_python():
@@ -64,7 +64,7 @@ def test_to_python():
 
     with pytest.raises(ValidationError):
         form = Form()
-        mf.to_python(form) == ValidationError
+        assert mf.to_python(form) == ValidationError
 
 
 def test_get_db_prep_save():

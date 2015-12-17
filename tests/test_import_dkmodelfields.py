@@ -2,9 +2,6 @@
 
 """Test to verify that all modules are importable.
 """
-from django.conf import settings
-settings.configure()
-
 import dkmodelfields.adminforms.durationfield
 import dkmodelfields.adminforms.monthfield
 import dkmodelfields.adminforms.yearfield
@@ -25,6 +22,6 @@ def test_import():
     assert dkmodelfields.monthfield
     assert dkmodelfields.norway
     assert dkmodelfields.phonefield
-    #assert dkmodelfields.statusfield
+    assert dkmodelfields.statusfield
     assert dkmodelfields.utils
     assert dkmodelfields.yearfield
