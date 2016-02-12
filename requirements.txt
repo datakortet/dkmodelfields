@@ -1,7 +1,7 @@
 dk
 Django==1.5.4
 South
-
+-e .
 py
 pytest
 pytest-cov
