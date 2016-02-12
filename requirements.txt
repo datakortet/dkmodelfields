@@ -2,8 +2,8 @@ dk
 Django==1.5.4
 South
 
-py>=1.4.26
-pytest==2.8.4
-pytest-cov>=1.8.0
-pytest-xdist>=1.11
+py
+pytest
+pytest-cov
+pytest-xdist
 
