@@ -2,6 +2,8 @@
 .. image:: https://travis-ci.org/thebjorn/dkmodelfields.svg?branch=master
     :target: https://travis-ci.org/thebjorn/dkmodelfields
 
+.. image:: https://coveralls.io/repos/github/datakortet/dkmodelfields/badge.svg?branch=master 
+    :target: https://coveralls.io/github/datakortet/dkmodelfields?branch=master 
 
 dkmodelfields -- short description
 ==================================================
