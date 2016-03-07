@@ -13,7 +13,8 @@ from django.utils.encoding import force_unicode
 
 
 class DurationInput(TextInput):
-    "Duration input widget."
+    """Duration input widget.
+    """
     def render(self, name, value, attrs=None):
         """output.append(u'<li>%(cb)s<label%(for)s>%(label)s</label></li>' %
            {"for": label_for, "label": option_label, "cb": rendered_cb})
@@ -34,7 +35,8 @@ class DurationInput(TextInput):
 
 
 class DurationField(Field):
-    "Form field for DurationField custom database field."
+    """Form field for DurationField custom database field.
+    """
     widget = DurationInput
 
     def __init__(self, *args, **kwargs):
@@ -50,7 +52,8 @@ class DurationField(Field):
             raise ValidationError('Enter a valid duration.')
 
     def to_python(self, value):  # pylint:disable=R0201
-        "Convert form input to python value."
+        """Convert form input to python value.
+        """
         try:
             return ttcal.Duration.parse(value)
         except ValueError:

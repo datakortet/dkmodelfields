@@ -13,7 +13,8 @@ from django.utils.encoding import force_unicode
 
 
 class YearInput(TextInput):
-    "Year input widget."
+    """Year input widget.
+    """
     def render(self, name, value, attrs=None):
         if value is None:
             value = u''
@@ -26,7 +27,8 @@ class YearInput(TextInput):
 
 
 class YearField(Field):
-    "Year field widget."
+    """Year field widget.
+    """
     widget = YearInput
 
     def __init__(self, *args, **kwargs):
@@ -40,7 +42,8 @@ class YearField(Field):
             raise ValidationError('Invalid year: %r' % value)
 
     def to_python(self, value):  # pylint:disable=R0201
-        "convert value to ttcal.Year()."
+        """convert value to ttcal.Year().
+        """
         try:
             return ttcal.Year(int(value))
         except:

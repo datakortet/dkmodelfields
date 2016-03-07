@@ -12,7 +12,8 @@ from django.utils.safestring import mark_safe
 
 
 class MonthInput(TextInput):
-    "Month input widget."
+    """Month input widget.
+    """
     def render(self, name, value, attrs=None):
         if value is None:
             value = u''
@@ -31,7 +32,8 @@ class MonthInput(TextInput):
 
 
 class MonthField(CharField):
-    "Month field widget."
+    """Month field widget.
+    """
     widget = MonthInput
 
     def __init__(self, *args, **kwargs):
@@ -56,7 +58,8 @@ class MonthField(CharField):
             raise ValidationError('Invalid month: %r' % value)
 
     def to_python(self, value):  # pylint:disable=R0201
-        "convert value to ttcal.Year()."
+        """convert value to ttcal.Month().
+        """
         try:
             return self._str_to_month(value)
         except:

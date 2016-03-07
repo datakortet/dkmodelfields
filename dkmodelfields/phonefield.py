@@ -13,7 +13,6 @@ def e164_validator(value):
             u"The phone number is not correctly formatted (e164)")
 
 
-
 class TelephoneField(CharField):
     """International phone number corresponding to E.164.
     """
@@ -21,7 +20,7 @@ class TelephoneField(CharField):
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 16
-        self.min_length = 8
+        self.min_length = 8    # "+47.1881" is 8 characters
         super(TelephoneField, self).__init__(*args, **kwargs)
         self.validators.extend([
             validators.MinLengthValidator(self.min_length),
@@ -29,5 +28,7 @@ class TelephoneField(CharField):
         ])
 
 
-add_introspection_rules([],
-    ["^dkmodelfields\.phonefield\.TelephoneField"])
+add_introspection_rules(
+    [],
+    ["^dkmodelfields\.phonefield\.TelephoneField"]
+)
