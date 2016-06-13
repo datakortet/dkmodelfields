@@ -120,6 +120,8 @@ class StatusDef(object):
 
     @property
     def namelength(self):
+        if not self._defs:
+            return 0
         return max(len(d.name) for d in self._defs)
 
     def is_category(self, txt):
@@ -152,14 +154,13 @@ class StatusField(Field):
 
     description = _("Status field")
 
-    def __init__(self, txt, *args, **kw):
-        self.txt = txt
+    def __init__(self, *args, **kw):
+        self.txt = args[0] if args else ""
         self.statusdef = StatusDef(self.txt)
         kw['max_length'] = kw.get('max_length', self.statusdef.namelength)
         kw['choices'] = self.statusdef.options
         super(StatusField, self).__init__(**kw)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
-        #print "STATUSFIELD", self, dir(self)
 
     def to_python(self, value):
         """Converts the input ``value`` into a StatusValue instance,
