@@ -42,15 +42,8 @@ def xstr_to_timedelta(td_str):
         )?
         """, re.VERBOSE)
     time_matches = time_matcher.match(td_str)
-    time_groups = time_matches.groupdict()
-
-    for key in time_groups.keys():
-        if time_groups[key]:
-            time_groups[key] = int(time_groups[key])
-        else:
-            time_groups[key] = 0
-
-    time_groups["days"] = time_groups["days"] + (time_groups["weeks"] * 7)
+    time_groups = {k: int(v or '0') for k, v in time_matches.groupdict().items()}
+    time_groups["days"] += time_groups["weeks"] * 7
 
     res = timedelta(
         days=time_groups["days"],

@@ -18,11 +18,13 @@ def test_tel_get_prep_value():
 
 def test_tel_validate():
     tf = TelefonField()
-    assert tf.run_validators("93420252") == None
-    assert tf.run_validators("93420252") == None
+    assert tf.run_validators("93420252") is None
+    assert tf.run_validators("93420252") is None
 
     with pytest.raises(ValidationError):
-        assert not tf.run_validators("123456") == ValidationError
+        assert not tf.run_validators("123456")
+
+    with pytest.raises(ValidationError):
         assert not tf.run_validators("4793420252") == ValidationError
 
 

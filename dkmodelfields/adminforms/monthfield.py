@@ -19,12 +19,12 @@ class MonthInput(TextInput):
             value = u''
         final_attrs = self.build_attrs(attrs, type='month', name=name)
         if value != u'':
-            if isinstance(value, (int, long)):
-               value = ttcal.Month(value)
+            # if isinstance(value, (int, long)):
+            #     value = ttcal.Month(value)
             if isinstance(value, unicode):
                 parts = value.split('-')
-                y = int(parts[0], 10)
-                m = int(parts[1], 10)
+                y = int(parts[0])
+                m = int(parts[1])
                 value = ttcal.Month(y, m)
             assert isinstance(value, ttcal.Month), type(value)
             final_attrs['value'] = unicode(value.format("Y-m"))
@@ -40,16 +40,14 @@ class MonthField(CharField):
         super(MonthField, self).__init__(*args, **kwargs)
 
     def _str_to_month(self, sval):  # pylint:disable=R0201
+        # type: (basestring) -> ttcal.Month
         # 2008-01
         if not isinstance(sval, (str, unicode)):
             print "NOT ISINSTANCE:", repr(sval)
         if not sval.strip():
             return None
-        parts = sval.split('-')
-        y = int(parts[0])
-        m = int(parts[1])
-        return ttcal.Month(y, m)
-    
+        return ttcal.Month.parse(sval)
+
     def clean(self, value):
         super(MonthField, self).clean(value)
         try:

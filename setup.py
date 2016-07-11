@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""dkmodelfields - short description
+"""dkmodelfields - Django model fields
 """
+
+import sys
+from setuptools import setup
+from setuptools.command.test import test as TestCommand
+
+version = '0.1.0'
 
 classifiers = """\
 Development Status :: 3 - Alpha
@@ -12,12 +18,6 @@ Programming Language :: Python :: 2
 Programming Language :: Python :: 2.7
 Topic :: Software Development :: Libraries
 """
-
-import setuptools
-from distutils.core import setup, Command
-from setuptools.command.test import test as TestCommand
-
-version = '0.1.0'
 
 
 class PyTest(TestCommand):

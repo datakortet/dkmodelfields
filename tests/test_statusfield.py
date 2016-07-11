@@ -4,8 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 def test_status_field():
-    sf = StatusField(
-        txt=u"""
+    sf = StatusField(u"""
         @start-saleStatusdef
         =========== =================================== =======================
         status      verbose explanation (for web)       category
@@ -17,8 +16,7 @@ def test_status_field():
         credit      Ordren er kreditert                 # [done]
         =========== =================================== =======================
         @end-saleStatusdef
-        """
-    )
+    """)
     assert sf.description == _('Status field')
     assert sf.to_python('sale').verbose == u'Ordren er fakturert'
     assert set(sf.get_prep_lookup('in', 'done')) == ({'cancelled', 'credit', 'sale'})

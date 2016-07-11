@@ -18,9 +18,11 @@ def test_get_prep_value():
 
 def test_validate():
     pf = TelephoneField()
-    assert pf.run_validators("+47.93420252") == None
-    assert pf.run_validators("+010.1234567890") == None
+    assert pf.run_validators("+47.93420252") is None
+    assert pf.run_validators("+010.1234567890") is None
 
     with pytest.raises(ValidationError):
-        assert not pf.run_validators("1234") == ValidationError
-        assert not pf.run_validators("93420252") == ValidationError
+        assert not pf.run_validators("1234")
+
+    with pytest.raises(ValidationError):
+        assert not pf.run_validators("93420252")

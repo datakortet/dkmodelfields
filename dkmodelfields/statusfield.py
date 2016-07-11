@@ -25,7 +25,8 @@ class StatusValue(object):
         return self.name
 
     def __repr__(self):
-        return 'StatusValue(name=%r, verbose=%r, categories=%r)' % (self.name, self.verbose, self.categories)
+        return 'StatusValue(name=%r, verbose=%r, categories=%r)' % (
+            self.name, self.verbose, self.categories)
 
 
 class StatusDef(object):
@@ -72,6 +73,7 @@ class StatusDef(object):
     \s*(?P<name>[a-z][-a-z0-9]*)\s*(?P<verbose>[^\#]*)\#\s*\[(?P<categories>[^]]*)\]
     ''', re.VERBOSE)
 
+    # noinspection PyMethodMayBeStatic
     def _parse(self, txt):  # pylint:disable=R0201
         lines = [line for line in txt.split('\n') if line.strip()]
         defs = pset()
@@ -96,7 +98,7 @@ class StatusDef(object):
             m = StatusDef.defre.match(line)
             if m:
                 gdict = pset((str(k), v)
-                                 for (k, v) in m.groupdict().items())
+                             for (k, v) in m.groupdict().items())
                 sval = StatusValue(name=gdict.name,
                                    verbose=gdict.verbose,
                                    categories=gdict.categories)
@@ -128,15 +130,18 @@ class StatusDef(object):
         return txt in self._categories
 
     def category(self, status):
-        "Return the category that status belongs to."
+        """Return the category that status belongs to.
+        """
         return self.status[status].category
 
     def category2status(self, category):
-        "Return all statuses belonging to `category`."
+        """Return all statuses belonging to `category`.
+        """
         return self._cat2status[category]
 
     def valid_status(self, s):
-        "Is `s` a well-defined status value?"
+        """Is `s` a well-defined status value?
+        """
         return s in self.status.keys()
 
     @property
