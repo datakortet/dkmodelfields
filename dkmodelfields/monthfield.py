@@ -27,19 +27,19 @@ class MonthField(Field):
 
     __metaclass__ = models.SubfieldBase
 
+    description = "A generic Month field"
+
     def __init__(self, *args, **kwargs):
         super(MonthField, self).__init__(*args, **kwargs)
         self.month_year_filter = True
 
-    def get_internal_type(self):
-        return "MonthField"
-    
+    # # needed in Django 1.7 (? this is default implementation..)
+    # def deconstruct(self):
+    #     name, path, args, kwargs = super(MonthField, self).deconstruct()
+    #     return name, path, args, kwargs
+
     def db_type(self, connection):
         return 'DATE'
-
-    # def _get_FIELD_display(self, field):
-    #     print field, self
-    #     return u'42'
 
     def get_prep_value(self, value):
         """Convert to a value usable as a paramter in a query.
@@ -92,11 +92,11 @@ class MonthField(Field):
     def get_db_prep_save(self, value, connection):
         """Convert to a value suitable for saving.
         """
-        if isinstance(value, (str, unicode)):
-            return value
-
         if isinstance(value, ttcal.Month):
             return '%04d-%02d-01' % (value.year, value.month)
+
+        if isinstance(value, (str, unicode)):
+            return value
 
         if isinstance(value, list):
             return '%04d-%02d-01' % (value[0].year, value[0].month)
@@ -106,7 +106,6 @@ class MonthField(Field):
     def get_db_prep_lookup(self, lookup_type, value, connection, prepared=False):
         """Return value prepared for database lookup.
         """
-
         if lookup_type == 'year':
             if isinstance(value, ttcal.Year):
                 value = value.year
@@ -132,24 +131,23 @@ class MonthField(Field):
     def to_python(self, value):
         """Converts the input ``value`` into a ttcal.Month instance,
            raising ValueError if the data can't be converted. 
-        """        
+        """
         if not value:
             return None
-        
-        if isinstance(value, datetime.date):
-            return ttcal.Month(value.year, value.month)
 
         if isinstance(value, ttcal.Month):
             return value
-        
+
+        if isinstance(value, datetime.date):
+            return ttcal.Month(value.year, value.month)
+
         if isinstance(value, (str, unicode)):
             return self._str_to_month(value)
 
         if not isinstance(value, ttcal.Month):
-            print "TOPYTHON:", value, type(value), repr(value)
             raise ValidationError("Value/month: %r, %r" %
                                   (value, type(value)))
-        
+
         return value
 
     def _str_to_month(self, sval):  # pylint:disable=R0201
