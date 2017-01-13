@@ -162,7 +162,7 @@ class StatusField(Field):
     def __init__(self, *args, **kw):
         self.txt = args[0] if args else ""
         self.statusdef = StatusDef(self.txt)
-        kw['max_length'] = kw.get('max_length', self.statusdef.namelength)
+        self.max_length = kw['max_length'] = kw.get('max_length', self.statusdef.namelength)
         kw['choices'] = self.statusdef.options
         super(StatusField, self).__init__(**kw)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
@@ -186,6 +186,9 @@ class StatusField(Field):
 
     def get_internal_type(self):
         return "StatusField"
+
+    def db_type(self, connection):
+        return 'VARCHAR(%s)' % self.max_length
 
     def get_prep_lookup(self, lookup_type, value):
         """Return a value prepared for database lookup.
