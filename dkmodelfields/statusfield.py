@@ -37,7 +37,7 @@ class StatusDef(object):
 
            class MyModel(models.Model):
                ..fields..
-               STATUSDEF = statusdef.StatusValues(u'''
+               STATUSDEF = statusdef.StatusDef(u'''
 
                     @start-tagname
                     =========== =================================== ==========
