@@ -92,12 +92,12 @@ def test_get_prep_value():
 def test_get_prep_lookup():
     mf = MonthField()
     assert mf.get_prep_lookup('year', '2016') == [
-        '2016-01-01',
-        '2016-12-31 23:59:59.999999'
+        date(2016, 1, 1),
+        date(2016, 12, 31)
     ]
     assert mf.get_prep_lookup('year', ttcal.Year(2016)) == [
-        '2016-01-01',
-        '2016-12-31 23:59:59.999999'
+        date(2016, 1, 1),
+        date(2016, 12, 31)
     ]
     assert mf.get_prep_lookup('month', ttcal.Month(2016, 4)) == [u'2016-04']
 
@@ -117,12 +117,12 @@ def test_get_db_prep_value():
 def test_get_db_prep_lookup():
     mf = MonthField()
     assert mf.get_db_prep_lookup('year', '2016', connection) == [
-        '2016-01-01',
-        '2016-12-31 23:59:59.999999'
+        date(2016, 1, 1),
+        date(2016, 12, 31)
     ]
     assert mf.get_db_prep_lookup('year', ttcal.Year(2016), connection) == [
-        '2016-01-01',
-        '2016-12-31 23:59:59.999999'
+        date(2016, 1, 1),
+        date(2016, 12, 31)
     ]
     assert mf.get_db_prep_lookup('month', ttcal.Month(2016, 4), connection) == [u'2016-04']
 
@@ -149,4 +149,3 @@ def test_get_db_prep_save():
 
 # def test_month_field_year_simple_filter():
 #     filter = MonthFieldYearSimpleFilter()
-
