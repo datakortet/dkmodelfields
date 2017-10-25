@@ -7,7 +7,6 @@
 
 
 import datetime
-from django.db.models.fields import Field
 from django.db import models
 
 from django.utils.encoding import smart_str, smart_unicode
@@ -15,7 +14,7 @@ from dkmodelfields.adminforms import DurationField as DurationFormField
 from dk import ttcal
 
 
-class DurationField(Field):
+class DurationField(models.Field):
     """A duration field is used.
     """
     description = "A duration of time"

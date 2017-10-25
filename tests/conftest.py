@@ -5,6 +5,7 @@ DIRNAME=os.path.dirname(__file__)
 
 
 def pytest_configure():
+    import django
     from django.conf import settings
     settings.configure(
         PRODUCTION=False,
@@ -32,5 +33,4 @@ def pytest_configure():
             'dkmodelfields'
         ),
     )
-    # Need this line to avoid: AppRegistryNotReady: Models aren't loaded yet.
-    #django.setup()
+    django.setup()

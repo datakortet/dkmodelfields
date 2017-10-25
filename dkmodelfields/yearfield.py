@@ -63,7 +63,7 @@ class YearField(models.Field):
         return self.get_prep_value(val)
 
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules(
-    [],
-    ["^dkmodelfields\.yearfield\.YearField"])
+# from south.modelsinspector import add_introspection_rules
+# add_introspection_rules(
+#     [],
+#     ["^dkmodelfields\.yearfield\.YearField"])
