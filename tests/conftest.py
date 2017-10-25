@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 
+import django
+
 DIRNAME=os.path.dirname(__file__)
 
 
@@ -33,4 +35,4 @@ def pytest_configure():
         ),
     )
     # Need this line to avoid: AppRegistryNotReady: Models aren't loaded yet.
-    #django.setup()
+    django.setup()
