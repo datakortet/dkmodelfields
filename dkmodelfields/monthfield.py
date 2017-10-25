@@ -7,7 +7,6 @@
 # R0904 too many public methods
 
 import datetime
-from django.db.models.fields import Field
 from django.db import models, connection as cn
 from django.core.exceptions import ValidationError
 # from django.contrib.admin.filterspecs import FilterSpec
@@ -20,7 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin import SimpleListFilter
 
 
-class MonthField(Field):
+class MonthField(models.Field):
     """MySQL date <-> ttcal.Month() mapping.
        Maps the month to the first day of the month.
     """
@@ -172,10 +171,10 @@ class MonthField(Field):
         return super(MonthField, self).formfield(**defaults)
 
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules(
-    [],
-    ["^dkmodelfields\.monthfield\.MonthField"])
+# from south.modelsinspector import add_introspection_rules
+# add_introspection_rules(
+#     [],
+#     ["^dkmodelfields\.monthfield\.MonthField"])
 
 
 # class MonthFieldYearFilterSpec(FilterSpec):

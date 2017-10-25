@@ -225,5 +225,5 @@ class StatusField(Field):
         return super(StatusField, self).formfield(**defaults)
 
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([],["^dkmodelfields\.statusfield\.StatusField"])
+# from south.modelsinspector import add_introspection_rules
+# add_introspection_rules([],["^dkmodelfields\.statusfield\.StatusField"])
