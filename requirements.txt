@@ -3,3 +3,4 @@ django==1.7.11
 pytest
 pytest-cov
 pytest-xdist
+-e .
