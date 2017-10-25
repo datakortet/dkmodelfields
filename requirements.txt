@@ -1,6 +1,5 @@
 dk
 Django==1.7.11
-South
 -e .
 py
 pytest
