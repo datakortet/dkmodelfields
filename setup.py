@@ -46,7 +46,6 @@ setup(
     install_requires=[
         'dk',
         'Django',
-        'South'
     ],
     description=__doc__.strip(),
     classifiers=[line for line in classifiers.split('\n') if line],

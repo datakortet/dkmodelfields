@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.core.exceptions import ValidationError
 import re
+
 from django.core import validators
+from django.core.exceptions import ValidationError
 from django.db.models.fields import CharField
 from django.utils.translation import ugettext_lazy as _
-# from south.modelsinspector import add_introspection_rules
 
 
 def e164_validator(value):
@@ -28,12 +28,6 @@ class TelephoneField(CharField):
         ])
 
     def deconstruct(self):
-        # not strictly necessary
         name, path, args, kwargs = super(TelephoneField, self).deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs
-
-# add_introspection_rules(
-#     [],
-#     ["^dkmodelfields\.phonefield\.TelephoneField"]
-# )
