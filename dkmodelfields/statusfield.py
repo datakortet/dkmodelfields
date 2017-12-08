@@ -166,6 +166,12 @@ class StatusField(Field):
         kw['choices'] = self.statusdef.options
         super(StatusField, self).__init__(**kw)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
+        
+    def deconstruct(self):
+        name, path, args, kwargs = super(StatusField, self).deconstruct()
+        del kwargs['max_length']
+        kwargs['choices'] = self.statusdef.options
+        return name, path, args, kwargs
 
     def to_python(self, value):
         """Converts the input ``value`` into a StatusValue instance,
@@ -214,6 +220,8 @@ class StatusField(Field):
     def get_prep_value(self, value):
         """Convert to a value useable as a parameter in a query.
         """
+        if value is None:
+            return value
         return self.to_python(value).name
 
     def formfield(self, **kwargs):
