@@ -103,7 +103,7 @@ class DurationField(models.Field):
         return super(DurationField, self).formfield(**defaults)
 
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules(
-    [],
-    ["^dkmodelfields\.durationfield\.DurationField"])
+# from south.modelsinspector import add_introspection_rules
+# add_introspection_rules(
+#     [],
+#     ["^dkmodelfields\.durationfield\.DurationField"])
