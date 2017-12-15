@@ -106,18 +106,21 @@ class MonthField(models.Field):
         """Return value prepared for database lookup.
         """
         if lookup_type == 'year':
-            if isinstance(value, ttcal.Year):
-                value = value.year
-            else:
-                try:
-                    if isinstance(value, list):
-                        date = datetime.datetime.strptime(value[0],
-                                                          "%Y-%m-%d %H:%M:%S")
+            try:
+                if isinstance(value, ttcal.Year):
+                    value = value.year
+                elif isinstance(value, list) and len(value) > 0:
+                    v = value[0]
+                    if isinstance(v, datetime.date):
+                        value = v.year
+                    else:
+                        date = datetime.datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
                         value = date.year
-                    value = int(value)
-                except TypeError:
-                    raise ValueError(
-                        "The __year lookup type requires an integer argument")
+                value = int(value)
+            except TypeError:
+                raise ValueError(
+                    "The __year lookup type does not understand " + repr(value)
+                )
 
             return connection.ops.year_lookup_bounds_for_date_field(value)
 
