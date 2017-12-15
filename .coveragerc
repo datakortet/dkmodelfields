@@ -11,6 +11,9 @@ exclude_lines =
     pragma: no cover
     pragma: nocover
 
+    ;; skip deconstructs
+    def deconstruct
+
     ;; Don't complain about missing debug-only code:
     def __repr__
     if self\.debug

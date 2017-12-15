@@ -2,12 +2,15 @@
 import pytest
 from datetime import date, timedelta
 
+from django.core.exceptions import ValidationError
 from django.db import connection
 from django.forms import Form
-
+from django.test import RequestFactory
 from dk import ttcal
 from dkmodelfields import MonthField
 from dkmodelfields import adminforms
+from dkmodelfields.monthfield import MonthFieldYearSimpleFilter
+from testapp.models import M, AM
 
 
 @pytest.fixture
@@ -20,6 +23,7 @@ def monthform():
 def test_formfield():
     mf = MonthField()
     assert isinstance(mf.formfield(), adminforms.monthfield.MonthField)
+    assert mf.db_type(connection) == 'DATE'
 
 
 def test_month_form_field(monthform):
@@ -87,6 +91,7 @@ def test_get_prep_value():
     day = date(2015, 6, 1)
     nextday = day + timedelta(days=1)
     assert mf.get_prep_value([day, nextday]) == '2015-06-01'
+    assert mf.get_prep_value({}) == {}
 
 
 def test_get_prep_lookup():
@@ -112,6 +117,7 @@ def test_get_db_prep_value():
     day = date(2015, 6, 1)
     nextday = day + timedelta(days=1)
     assert mf.get_db_prep_value([day, nextday], None) == '2015-06-01'
+    assert mf.get_db_prep_value({}, connection) == {}
 
 
 def test_get_db_prep_lookup():
@@ -153,6 +159,9 @@ def test_to_python():
     assert mf.to_python(date(2016, 4, 2)) == ttcal.Month(2016, 4)
     assert mf.to_python(ttcal.Month(2015, 6)) == ttcal.Month(2015, 6)
 
+    with pytest.raises(ValidationError):
+        mf.to_python(5)
+
 
 def test_get_db_prep_save():
     mf = MonthField()
@@ -163,5 +172,35 @@ def test_get_db_prep_save():
     assert mf.get_db_prep_save([day, nextday], None) == '2015-06-01'
 
 
-# def test_month_field_year_simple_filter():
-#     filter = MonthFieldYearSimpleFilter()
+def test_value_to_string():
+    dec = ttcal.Month(2017, 12)
+    m = M(month=dec)
+    mf = M._meta.get_field('month')
+    assert mf.value_to_string(None) == ''
+    assert mf.value_to_string(m) == '2017-12'
+
+
+def test_month_field_year_simple_filter():
+    M.objects.all().delete()
+    jan = ttcal.Month(2017, 1)
+    M.objects.create(month=jan)
+    feb = ttcal.Month(2017, 2)
+    M.objects.create(month=feb)
+    rf = RequestFactory()
+    f = MonthFieldYearSimpleFilter(
+        request=rf.get('/'),
+        params=(),
+        model=M,
+        model_admin=AM(M, None)
+    )
+    assert f.parameter_name == 'month_year'
+    assert f.lookups(rf.get('/'), AM(M, None)) == [
+        ('2017', 2017)
+    ]
+
+    assert [jan, feb] == [m.month
+                          for m in f.queryset(
+                              rf.get('/?month_year=2017-01'), M.objects.all()
+                          ).all()
+                         ]
+

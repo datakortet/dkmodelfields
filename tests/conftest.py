@@ -2,11 +2,13 @@
 import os
 
 import django
+import sys
 
 DIRNAME=os.path.dirname(__file__)
 
 
 def pytest_configure():
+    sys.path.append(DIRNAME)
     from django.conf import settings
     settings.configure(
         PRODUCTION=False,
@@ -16,7 +18,7 @@ def pytest_configure():
         DATABASES={
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-                'NAME': 'c:/srv/lib/dkmodelfields/tests/dkmodelfields-testing.db',  # Or path to database file if using sqlite3.
+                'NAME': os.path.join(DIRNAME, 'dkmodelfields-testing.db'),  # Or path to database file if using sqlite3.
                 # 'NAME': ':memory:',
                 # The following settings are not used with sqlite3:
                 'USER': '',
@@ -31,8 +33,11 @@ def pytest_configure():
             'django.contrib.sessions',
             'django.contrib.admin',
             'django.contrib.sites',
-            'dkmodelfields'
+            'dkmodelfields',
+            'testapp',
         ),
     )
     # Need this line to avoid: AppRegistryNotReady: Models aren't loaded yet.
     django.setup()
+    from django.core.management import call_command
+    call_command('migrate', interactive=False)

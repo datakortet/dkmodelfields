@@ -27,7 +27,6 @@ class YearField(models.Field):
             return None
         
         if isinstance(value, (int, long)):
-            #print 'inthandler'
             return ttcal.Year(value)
 
         return value
@@ -58,12 +57,5 @@ class YearField(models.Field):
 
     def value_to_string(self, obj):
         "Serialization."
-        #print "value_to_string", repr(obj)
         val = self._get_val_from_obj(obj)
         return self.get_prep_value(val)
-
-
-# from south.modelsinspector import add_introspection_rules
-# add_introspection_rules(
-#     [],
-#     ["^dkmodelfields\.yearfield\.YearField"])

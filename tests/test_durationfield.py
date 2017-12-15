@@ -11,16 +11,18 @@ from dkmodelfields import DurationField
 def test_create():
     df = DurationField()
     assert df.description == 'A duration of time'
+    assert df.db_type(connection) == 'BIGINT'
 
 
 def test_get_internal_type():
     df = DurationField()
-    df.get_internal_type() == 'DurationField'
+    assert df.get_internal_type() == 'DurationField'
 
 
 def test_get_prep_value():
     df = DurationField()
-    df.get_prep_value(60*60*2) == 'Duration(hours=2, minutes=0, seconds=0)'
+    assert df.get_prep_value(None) is None
+    assert df.get_prep_value(60*60*2) == Duration(hours=2, minutes=0, seconds=0).seconds
 
 
 def test_get_db_prep_save():
@@ -32,13 +34,19 @@ def test_get_db_prep_save():
 
 def test_to_python():
     df = DurationField()
-    assert df.to_python(None) == None
+    assert df.to_python(None) is None
     assert df.to_python(Duration(hours=1, minutes=40)) == Duration(hours=1, minutes=40)
     assert df.to_python(timedelta(hours=3, minutes=30)) == Duration(hours=3, minutes=30)
     assert df.to_python(60*60*3) == Duration(hours=3, minutes=0, seconds=0)
     assert df.to_python('2:20:0') == Duration(hours=2, minutes=20)
+    assert df.to_python('asdf') == Duration()
 
 
 def test_formfield():
     df = DurationField()
     assert df.formfield().to_python('4:30') == Duration(hours=4, minutes=30)
+
+
+def test_value_to_string():
+    df = DurationField()
+    assert df.value_to_string(None) == ''

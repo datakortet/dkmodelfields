@@ -5,4 +5,4 @@ py
 pytest
 pytest-cov
 pytest-xdist
-
+django-localflavor==1.3

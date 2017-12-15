@@ -2,6 +2,7 @@
 
 """Test to verify that all modules are importable.
 """
+import dkmodelfields.apps
 import dkmodelfields.adminforms.durationfield
 import dkmodelfields.adminforms.monthfield
 import dkmodelfields.adminforms.yearfield
@@ -15,6 +16,7 @@ import dkmodelfields.yearfield
 
 
 def test_import():
+    assert dkmodelfields.apps
     assert dkmodelfields.adminforms.durationfield
     assert dkmodelfields.adminforms.monthfield
     assert dkmodelfields.adminforms.yearfield

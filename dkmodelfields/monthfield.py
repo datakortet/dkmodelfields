@@ -100,7 +100,7 @@ class MonthField(models.Field):
         if isinstance(value, list):
             return '%04d-%02d-01' % (value[0].year, value[0].month)
 
-        return value
+        return value  # pragma: nocover
 
     def get_db_prep_lookup(self, lookup_type, value, connection, prepared=False):
         """Return value prepared for database lookup.
@@ -146,16 +146,12 @@ class MonthField(models.Field):
         if isinstance(value, (str, unicode)):
             return self._str_to_month(value)
 
-        if not isinstance(value, ttcal.Month):
-            raise ValidationError("Value/month: %r, %r" %
-                                  (value, type(value)))
-
-        return value
+        raise ValidationError("Value/month: %r, %r" % (value, type(value)))
 
     def _str_to_month(self, sval):  # pylint:disable=R0201
         # 2008-01
         if not sval.strip():
-            return None
+            return None  # pragma: nocover
         y = int(sval[:4])
         m = int(sval[5:7])
         return ttcal.Month(y, m)
@@ -164,6 +160,8 @@ class MonthField(models.Field):
         """Serialization.
         """
         val = self._get_val_from_obj(obj)
+        if not val:
+            return val
         return '%04d-%02d' % (val.year, val.month)
 
     def formfield(self, **kwargs):  # pylint:disable=W0221
@@ -174,55 +172,6 @@ class MonthField(models.Field):
         return super(MonthField, self).formfield(**defaults)
 
 
-# from south.modelsinspector import add_introspection_rules
-# add_introspection_rules(
-#     [],
-#     ["^dkmodelfields\.monthfield\.MonthField"])
-
-
-# class MonthFieldYearFilterSpec(FilterSpec):
-#     """This is a filter for the admin site, that enables filtering on
-#        the year of the month.
-#     """
-#     def __init__(self, f, request, params, model, model_admin):
-#         super(MonthFieldYearFilterSpec, self).__init__(f, request, params,
-#                                                        model, model_admin)
-#         self.lookup_kwarg = '%s__year' % f.name
-#         self.lookup_val = request.GET.get(self.lookup_kwarg, None)
-#         self.lookup_choices = model_admin.queryset(
-#             request).distinct().order_by(
-#             f.name).values(f.name)
-#
-#         self.links = []
-#
-#         choices = [val[self.field.name] for val in self.lookup_choices]
-#         choices = [v for v in choices if v is not None]
-#         choices = set(m.year for m in choices)
-#         for val in sorted(choices):
-#             self.links.append((unicode(val),
-#                                {'%s__year' % self.field.name: str(val)}))
-#         self.lookup_choices = [v[0] for v in self.links]
-#
-#     def title(self):
-#         return "year"
-#
-#     def choices(self, cl):
-#         yield {'selected': self.lookup_val is None,
-#                 'query_string': cl.get_query_string({}, [self.lookup_kwarg]),
-#                 'display': _('All')}
-#         for val, param_dict in self.links:
-#             yield {'selected': self.lookup_val == val,
-#                    'query_string': cl.get_query_string(param_dict),
-#                    'display': val}
-        
-
-# FilterSpec.register(lambda f: isinstance(f, MonthField),
-#                     MonthFieldYearFilterSpec)
-# FilterSpec.filter_specs.insert(
-#     0, (lambda f: getattr(f, 'month_year_filter', False),
-#                                    MonthFieldYearFilterSpec))
-
-
 class MonthFieldYearSimpleFilter(SimpleListFilter):
     title = _(u'år')
 
@@ -230,7 +179,7 @@ class MonthFieldYearSimpleFilter(SimpleListFilter):
 
     def lookups(self, request, model_admin):
         links = []
-        months = model_admin.queryset(
+        months = model_admin.get_queryset(
             request
         ).distinct().order_by(
             'month'

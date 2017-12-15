@@ -27,7 +27,7 @@ class TelephoneField(CharField):
             e164_validator
         ])
 
-    def deconstruct(self):
+    def deconstruct(self):  # pragma: nocover
         name, path, args, kwargs = super(TelephoneField, self).deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs

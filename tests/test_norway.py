@@ -5,7 +5,8 @@ from django.core.exceptions import ValidationError
 from dkmodelfields import TelefonField, GateField, PostnrField, PoststedField
 from django.utils.translation import ugettext_lazy as _
 
-#### TELEFON FIELD ####
+
+# TELEFON FIELD ####
 def test_telefon_field():
     tf = TelefonField()
     assert tf.description == _("Phone number")
@@ -28,7 +29,7 @@ def test_tel_validate():
         assert not tf.run_validators("4793420252") == ValidationError
 
 
-#### GATE FIELD ####
+# GATE FIELD ####
 def test_gate_field():
     gf = GateField()
     assert gf.description == _("Norwegian street address field")
@@ -41,8 +42,8 @@ def test_gate_get_prep_value():
 
 def test_gate_validate():
     gf = GateField()
-    assert gf.run_validators("Storgata 5") == None
-    assert gf.run_validators("PB 3") == None
+    assert gf.run_validators("Storgata 5") is None
+    assert gf.run_validators("PB 3") is None
 
     with pytest.raises(ValidationError):
         assert not gf.run_validators("") == ValidationError
@@ -52,10 +53,14 @@ def test_gate_validate():
         ) == ValidationError
 
 
-#### POSTNR FIELD ####
+# POSTNR FIELD ####
 def test_postnr_field():
     pf = PostnrField()
     assert pf.description == _("Norwegian zip code field")
+    assert pf.formfield().validate('1234') is None
+    with pytest.raises(ValidationError):
+        assert pf.formfield().validate(None)
+    assert pf.formfield(required=False).validate(None) is None
 
 
 def test_postnr_get_prep_value():
@@ -65,17 +70,17 @@ def test_postnr_get_prep_value():
 
 def test_postnr_validate():
     pf = PostnrField()
-    assert pf.run_validators("9900") == None
-    assert pf.run_validators("7054") == None
+    assert pf.run_validators("9900") is None
+    assert pf.run_validators("7054") is None
 
     with pytest.raises(ValidationError):
-        assert not pf.run_validators("78") == ValidationError
+        pf.run_validators("78")
 
     with pytest.raises(TypeError):
-        assert not pf.run_validators(874) == TypeError
+        pf.run_validators(874)
 
 
-#### POSTSTED FIELD ####
+# POSTSTED FIELD ####
 def test_poststed_field():
     pf = PoststedField()
     assert pf.description == _("Norwegian zip code name")
@@ -88,11 +93,5 @@ def test_poststed_get_prep_value():
 
 def test_poststed_validate():
     pf = PoststedField()
-    assert pf.run_validators("Kirkenes") == None
-    assert pf.run_validators("") == None
-
-    with pytest.raises(ValidationError):
-        assert not pf.run_validators("Tulliball sted ingen steds. Her der eller i utlandet.") == ValidationError
-
-    with pytest.raises(TypeError):
-        assert not pf.run_validators(9900) == TypeError
+    assert pf.run_validators("Kirkenes") is None
+    assert pf.run_validators("") is None

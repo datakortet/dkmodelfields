@@ -11,6 +11,8 @@ from dkmodelfields import YearField
 from dkmodelfields import adminforms
 import datetime
 
+from testapp.models import Y
+
 
 @pytest.fixture
 def yearform():
@@ -70,6 +72,7 @@ def test_create():
 
 def test_get_prep_value():
     yf = YearField()
+    assert yf.get_prep_value(2017) == 2017
     assert yf.get_prep_value('2015-01-05') == '2015-01-05'
     assert yf.get_prep_value(ttcal.Year(2015)) == 2015
     day = date(2016, 6, 1)
@@ -84,6 +87,7 @@ def test_get_db_prep_value():
     yf = YearField()
     assert yf.get_db_prep_value(2016, connection) == 2016
     assert yf.get_db_prep_value(ttcal.Year(2015), connection) == 2015
+    assert yf.get_db_prep_value('asdf', connection) == 'asdf'
 
 
 def test_to_python():
@@ -91,3 +95,10 @@ def test_to_python():
     assert yf.to_python('') is None
     assert yf.to_python('2015') == '2015'
     assert yf.to_python(2015) == ttcal.Year(2015)
+
+
+def test_value_to_string():
+    y2017 = ttcal.Year(2017)
+    y = Y(yr=y2017)
+    yf = Y._meta.get_field('yr')
+    assert yf.value_to_string(y) == 2017

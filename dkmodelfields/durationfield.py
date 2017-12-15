@@ -85,11 +85,13 @@ class DurationField(models.Field):
         if isinstance(str_val, basestring):
             try:
                 return ttcal.Duration.parse(str_val)
-            except ValueError:
+            except ValueError:  # pragma: nocover
                 raise ValueError(
-                    "This value must be in 'w d h min s ms us' format.")
+                    "This value must be in 'w d h min s ms us' format, not:" +
+                    repr(value)
+                )
 
-        raise ValueError("The value's type could not be converted")
+        raise ValueError("The value's type could not be converted")  # pragma: nocover
 
     def value_to_string(self, obj):
         "Serialize."
@@ -101,9 +103,3 @@ class DurationField(models.Field):
         defaults = {'form_class': DurationFormField}
         defaults.update(kwargs)
         return super(DurationField, self).formfield(**defaults)
-
-
-# from south.modelsinspector import add_introspection_rules
-# add_introspection_rules(
-#     [],
-#     ["^dkmodelfields\.durationfield\.DurationField"])

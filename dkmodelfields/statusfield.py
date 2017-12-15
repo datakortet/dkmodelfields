@@ -103,7 +103,7 @@ class StatusDef(object):
                                    verbose=gdict.verbose,
                                    categories=gdict.categories)
                 defs[sval.name] = sval
-            else:
+            else:  # pragma: nocover
                 print 'error parsing:', repr(line)
 
         return defs
@@ -123,7 +123,7 @@ class StatusDef(object):
     @property
     def namelength(self):
         if not self._defs:
-            return 0
+            return 0  # pragma: nocover
         return max(len(d.name) for d in self._defs)
 
     def is_category(self, txt):
@@ -167,7 +167,7 @@ class StatusField(Field):
         super(StatusField, self).__init__(**kw)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
         
-    def deconstruct(self):
+    def deconstruct(self):  # pragma: nocover
         name, path, args, kwargs = super(StatusField, self).deconstruct()
         del kwargs['max_length']
         kwargs['choices'] = self.statusdef.options
@@ -231,7 +231,3 @@ class StatusField(Field):
         defaults = {'max_length': self.max_length}
         defaults.update(kwargs)
         return super(StatusField, self).formfield(**defaults)
-
-
-# from south.modelsinspector import add_introspection_rules
-# add_introspection_rules([],["^dkmodelfields\.statusfield\.StatusField"])

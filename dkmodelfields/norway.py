@@ -17,14 +17,11 @@ class TelefonField(CharField):
         super(TelefonField, self).__init__(*args, **kwargs)
         self.validators.append(validators.MinLengthValidator(self.min_length))
 
-    def deconstruct(self):
+    def deconstruct(self):  # pragma: nocover
         # not strictly necessary
         name, path, args, kwargs = super(TelefonField, self).deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs
-
-# add_introspection_rules([],
-#     ["^dkmodelfields\.norway\.TelefonField"])
 
 
 class GateField(CharField):
@@ -36,14 +33,11 @@ class GateField(CharField):
         kwargs['max_length'] = 50
         super(GateField, self).__init__(*args, **kwargs)
 
-    def deconstruct(self):
+    def deconstruct(self):  # pragma: nocover
         # not strictly necessary
         name, path, args, kwargs = super(GateField, self).deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs
-
-# add_introspection_rules([],
-#     ["^dkmodelfields\.norway\.GateField"])
 
 
 class PostnrField(CharField):
@@ -65,14 +59,11 @@ class PostnrField(CharField):
         defaults.update(kwargs)
         return super(PostnrField, self).formfield(**defaults)
 
-    def deconstruct(self):
+    def deconstruct(self):  # pragma: nocover
         # not strictly necessary
         name, path, args, kwargs = super(PostnrField, self).deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs
-
-# add_introspection_rules([],
-#     ["^dkmodelfields\.norway\.PostnrField"])
 
 
 class PoststedField(CharField):
@@ -84,11 +75,8 @@ class PoststedField(CharField):
         kwargs['max_length'] = 50
         super(PoststedField, self).__init__(*args, **kwargs)
 
-    def deconstruct(self):
+    def deconstruct(self):  # pragma: nocover
         # not strictly necessary
         name, path, args, kwargs = super(PoststedField, self).deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs
-
-# add_introspection_rules([],
-#     ["^dkmodelfields\.norway\.PoststedField"])
