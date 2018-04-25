@@ -169,7 +169,7 @@ class StatusField(Field):
         
     def deconstruct(self):  # pragma: nocover
         name, path, args, kwargs = super(StatusField, self).deconstruct()
-        del kwargs['max_length']
+        # del kwargs['max_length']
         kwargs['choices'] = self.statusdef.options
         return name, path, args, kwargs
 
