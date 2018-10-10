@@ -199,8 +199,8 @@ class StatusField(Field):
     def get_prep_lookup(self, lookup_type, value):
         """Return a value prepared for database lookup.
         """
-        res = set()
         if lookup_type == 'in':
+            res = set()
             if isinstance(value, basestring):
                 if self.statusdef.is_category(value):
                     res |= self.statusdef.category2status(value)
@@ -213,9 +213,11 @@ class StatusField(Field):
                     else:
                         res.add(v)
             res = [self.get_prep_value(v) for v in res]
+            return res
+        elif lookup_type == 'exact':
+            return value
         else:
-            res.add(value)
-        return res
+            return value
 
     def get_prep_value(self, value):
         """Convert to a value useable as a parameter in a query.
