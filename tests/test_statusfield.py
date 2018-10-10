@@ -32,4 +32,5 @@ def test_status_field():
     assert set(sf.get_prep_lookup('in', 'done')) == ({'cancelled', 'credit', 'sale'})
     sv = StatusValue(name='cancelled', verbose='Ordren er kansellert', categories=('done'))
     assert sf.get_prep_lookup('in', (sv,)) == ['cancelled']
-    assert sf.get_prep_lookup('', 'init') == ({'init'})
+    assert sf.get_prep_lookup('', 'init') == 'init'
+    assert sf.get_prep_lookup('exact', 'init') == 'init'
