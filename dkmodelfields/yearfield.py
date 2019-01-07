@@ -6,7 +6,7 @@
 # pylint:disable=R0904
 
 from django.db import models
-from dk import ttcal
+import ttcal
 from dkmodelfields.adminforms import YearField as YearFormField
 
 

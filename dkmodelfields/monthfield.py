@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 # from django.contrib.admin.filterspecs import FilterSpec
 from django.utils.encoding import force_unicode
 
-from dk import ttcal
+import ttcal
 from dkmodelfields.adminforms import MonthField as MonthFormField
 
 from django.utils.translation import ugettext_lazy as _

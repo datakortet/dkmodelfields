@@ -1,6 +1,7 @@
 dk>=0.7.9
 Django==1.7.11
 -e .
+-e ../ttcal
 py
 pytest
 pytest-cov

@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db import connection
 from django.forms import Form
 
-from dk import ttcal
+import ttcal
 from dkmodelfields import YearField
 from dkmodelfields import adminforms
 import datetime

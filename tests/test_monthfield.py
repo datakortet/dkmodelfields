@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db import connection
 from django.forms import Form
 from django.test import RequestFactory
-from dk import ttcal
+import ttcal
 from dkmodelfields import MonthField
 from dkmodelfields import adminforms
 from dkmodelfields.monthfield import MonthFieldYearSimpleFilter

@@ -3,7 +3,7 @@
 """Admin support code for MonthFields.
 """
 
-from dk import ttcal
+import ttcal
 from django.forms.fields import CharField
 from django.forms import ValidationError
 from django.forms.util import flatatt

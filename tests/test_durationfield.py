@@ -4,7 +4,7 @@ from datetime import timedelta, datetime
 import pytest
 from django.db import connection
 
-from dk.ttcal import Duration
+from ttcal import Duration
 from dkmodelfields import DurationField
 
 
