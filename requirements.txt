@@ -4,7 +4,7 @@ future==0.17.1
 -e .
 -e ../ttcal
 py
-pytest
+pytest==3.9.3
 pytest-cov
 pytest-xdist
 django-localflavor==1.3
