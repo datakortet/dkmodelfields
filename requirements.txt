@@ -2,7 +2,7 @@ dk>=0.7.9
 Django==1.7.11
 future==0.17.1
 -e .
--e ../ttcal
+ttcal
 py
 pytest==3.9.3
 pytest-cov
