@@ -1,10 +1,11 @@
-dk>=0.7.9
+dk>=1.0.2
 Django==1.7.11
 future==0.17.1
 -e .
-ttcal
-py
+ttcal>=1.0.2
+py==1.7.0
+coverage==4.4.1
 pytest==3.9.3
-pytest-cov
-pytest-xdist
+pytest-cov==2.5.1
+pytest-xdist==1.20.1
 django-localflavor==1.3
