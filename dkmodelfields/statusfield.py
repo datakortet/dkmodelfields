@@ -7,21 +7,24 @@ from dk.collections import pset
 from collections import defaultdict
 from django.db.models.fields import Field
 from django.db import models
+from django import forms
 
 
 class StatusValue(object):
     def __init__(self, name=None, verbose=None, categories=()):
         self.name = name.strip()
-        self.verbose = verbose.strip()
+        self.verbose = verbose.strip() if verbose else ""
         if isinstance(categories, basestring):
             self.categories = re.split(r'[,\s]+', categories)
         else:
             self.categories = categories
 
     def __unicode__(self):
-        return self.verbose
+        print "UNICODE:STATUS:VALUE", self.name
+        return self.name
 
     def __str__(self):
+        print "STR:STATUS:VALUE:", self.name
         return self.name
 
     def __repr__(self):
@@ -149,7 +152,8 @@ class StatusDef(object):
         """Return list of pairs of (status, description), useful for
            selects boxes etc.
         """
-        return [(name, gdict.verbose) for name, gdict in self.status]
+        return [(name, gdict) for name, gdict in self.status]
+        # return [(name, gdict.verbose) for name, gdict in self.status]
 
 
 class StatusField(Field):
@@ -178,28 +182,43 @@ class StatusField(Field):
         """Converts the input ``value`` into a StatusValue instance,
            raising ValueError if the data can't be converted.
         """
+        print "TO:PYTHON:", value
         if not value:
+            print "NOT:VALUE:", None
             return None
 
         if isinstance(value, StatusValue):
+            print "STSTUS:VALUE:", value
             return value
 
         if isinstance(value, basestring):
             if value in self.statusdef.status:
+                print "FOUND_STATUSVAL:", self.statusdef.status[value]
+                #return value
                 return self.statusdef.status[value]
             raise ValueError("Unknown status: %r", value)
 
+        print "RETURNING:DEFULT:", value
         return value
 
-    def get_internal_type(self):
-        return "StatusField"
+    # def get_internal_type(self):
+    #     return "StatusField"
 
     def db_type(self, connection):
         return 'VARCHAR(%s)' % self.max_length
 
+    def get_db_prep_value(self, value, connection, prepared=False):
+        print "GET:DB:PREP:VALUE:", value
+        return self.get_prep_value(value)
+
+    def value_to_string(self, obj):
+        value = self._get_val_from_obj(obj)
+        return self.get_prep_value(value)
+
     def get_prep_lookup(self, lookup_type, value):
         """Return a value prepared for database lookup.
         """
+        print "GET:PREP:LOOKUP:", lookup_type, value
         if lookup_type == 'in':
             res = set()
             if isinstance(value, basestring):
@@ -223,14 +242,33 @@ class StatusField(Field):
     def get_prep_value(self, value):
         """Convert to a value useable as a parameter in a query.
         """
+        print "GET:PREP:VALUE:", value
         if value is None:
             return value
         return self.to_python(value).name
 
-    def formfield(self, **kwargs):
+    def formfield(self, *args, **kwargs):
         # Passing max_length to forms.CharField means that the value's length
         # will be validated twice. This is considered acceptable since we want
         # the value in the form field (to pass into widget for example).
-        defaults = {'max_length': self.max_length}
+        def status2txt(v):
+            print "CALLING:STATUS2:TXT:", v
+            if isinstance(v, StatusValue):
+                return v.name
+            return v
+
+        # print "FORMFIELD:", args, kwargs
+        defaults = {'choices_form_class': StatusSelectForm, 'max_length': self.max_length, 'coerce': status2txt}
         defaults.update(kwargs)
         return super(StatusField, self).formfield(**defaults)
+
+
+class StatusSelectForm(forms.TypedChoiceField):
+    def __init__(self, *args, **kwargs):
+        print "STATUS:SELECT:FORM:", args, kwargs
+        kwargs['choices'] = [(k, s.verbose if isinstance(s, StatusValue) else None) for k, s in kwargs['choices']]
+        super(StatusSelectForm, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        print "CLEAN:", value, type(value)
+        return super(StatusSelectForm, self).clean(value)
