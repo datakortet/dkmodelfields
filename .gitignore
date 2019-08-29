@@ -404,3 +404,4 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/node,less,sass,venv,python,django,pycharm
 
+/tests/dkmodelfields-testing.db

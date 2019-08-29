@@ -2,29 +2,41 @@ stages:
   - run
   - build
   - doc
+
 before_script:
   - python -V
   - pip -V
+  - dk --version
 
 py27:
   stage: run
   image: thebjorn/dktestpackage2:latest
   script:
-    - dk testpackage --ci
+    - dk testpackage --ci --tag=py27-dj17
   allow_failure: true
   artifacts:
     paths:
       - build/*
 
-py3:
+dj18:
   stage: run
-  image: thebjorn/dktestpackage3:latest
+  image: thebjorn/dktestpackage2:latest
   script:
-    - dk testpackage --ci
+    - dk testpackage --ci --django=1.8.19 --tag=py27-dj18
   allow_failure: true
   artifacts:
     paths:
       - build/*
+
+#py3:
+#  stage: run
+#  image: thebjorn/dktestpackage3:latest
+#  script:
+#    - dk testpackage --ci
+#  allow_failure: true
+#  artifacts:
+#    paths:
+#      - build/*
 
 coverage:
   stage: build
