@@ -1,0 +1,10 @@
+_schema: https://static.datakortet.no/schema/dkbuild.schema.yaml
+
+package:
+  name: dkmodelfields
+  description: Django model fields
+  version: 1.0.1
+  created: 2014
+
+build:
+  venv: dkmodelfields
