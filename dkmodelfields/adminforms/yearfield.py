@@ -6,7 +6,7 @@
 import ttcal
 from django.forms.fields import Field
 from django.forms import ValidationError
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_unicode
