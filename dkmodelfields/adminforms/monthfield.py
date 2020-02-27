@@ -6,9 +6,12 @@
 import ttcal
 from django.forms.fields import CharField
 from django.forms import ValidationError
-from django.forms.util import flatatt
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
+try:
+    from django.forms.utils import flatatt  # 1.8
+except ImportError:
+    from django.forms.util import flatatt   # 1.7
 
 
 class MonthInput(TextInput):
