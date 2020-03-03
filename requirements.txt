@@ -1,5 +1,5 @@
 dk>=1.0.2
-Django==1.7.11
+django==1.8.19
 future==0.17.1
 -e .
 ttcal>=1.0.2
