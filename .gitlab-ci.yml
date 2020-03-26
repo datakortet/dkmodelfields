@@ -1,77 +1,24 @@
-stages:
-  - run
-  - build
-  - doc
 
-before_script:
-  - python -V
-  - pip -V
-  - dk --version
+include:
+  - project: 'norsktest/dktools'
+    file: '/ci-templates/dkbuild.yml'
 
-py27:
-  stage: run
-  image: thebjorn/dktestpackage2:latest
+py27dj18:
+  extends: .testpackage
   script:
-    - dk testpackage --ci --tag=py27-dj17
-  allow_failure: true
-  artifacts:
-    paths:
-      - build/*
+    - dk testpackage --ci --tag=py27-dj18 --django=1.8.19
 
-dj18:
-  stage: run
-  image: thebjorn/dktestpackage2:latest
+py35dj18:
+  extends: .testpackage
+  image: thebjorn/dktestpackage3:latest
+  after_script: []      
   script:
-    - dk testpackage --ci --django=1.8.19 --tag=py27-dj18
-  allow_failure: true
-  artifacts:
-    paths:
-      - build/*
-
-#py3:
-#  stage: run
-#  image: thebjorn/dktestpackage3:latest
-#  script:
-#    - dk testpackage --ci
-#  allow_failure: true
-#  artifacts:
-#    paths:
-#      - build/*
+    - dk testpackage --ci --tag=py35-dj18 --django=1.8.19
 
 coverage:
-  stage: build
-  image: thebjorn/dktestpackage2:latest
-  script:
-    - dk combine-coverage
-  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   dependencies:
-    - py27
-    # - py3
-  artifacts:
-    paths:
-      - build/coverage/*
+    - py27dj18
 
 wheel:
-  stage: build
-  image: thebjorn/dktestpackage2:latest
-  script:
-    - dk build-wheel
   dependencies:
-    - py27
-  artifacts:
-    paths:
-      - docs/badge-wheel.rst
-
-pages:
-  stage: doc
-  image: thebjorn/dktestpackage2:latest
-  script:
-    - dk build-docs
-  dependencies:
-    - coverage
-    - wheel
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
+    - py27dj18
