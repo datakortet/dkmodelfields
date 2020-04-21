@@ -28,6 +28,13 @@ class StatusValue(object):
         return 'StatusValue(name=%r, verbose=%r, categories=%r)' % (
             self.name, self.verbose, self.categories)
 
+    def __json__(self):
+        return dict(
+            name=self.name,
+            verbose=self.verbose,
+            categories=self.categories
+        )
+
 
 class StatusDef(object):
     """Compact way to define status fields, that takes care of most of
