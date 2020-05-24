@@ -36,6 +36,8 @@ def test_status_field():
     assert sf.get_prep_lookup('', 'init') == 'init'
     assert sf.get_prep_lookup('exact', 'init') == 'init'
 
+    assert sv.__json__()['name'] == 'cancelled'
+
     name, path, args, kwargs = sf.deconstruct()
     assert name is None
     # print "PATH:", path
