@@ -5,12 +5,12 @@
 
 # pylint:disable=R0904
 # R0904 too many public methods
-
+from builtins import str as text
 import datetime
 from django.db import models, connection as cn
 from django.core.exceptions import ValidationError
 # from django.contrib.admin.filterspecs import FilterSpec
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 
 import ttcal
 from dkmodelfields.adminforms import MonthField as MonthFormField
@@ -43,7 +43,7 @@ class MonthField(models.Field):
     def get_prep_value(self, value):
         """Convert to a value usable as a paramter in a query.
         """
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, (bytes, text)):
             return value
 
         if isinstance(value, ttcal.Month):
@@ -70,14 +70,14 @@ class MonthField(models.Field):
             return cn.ops.year_lookup_bounds_for_date_field(value)
 
         if lookup_type == 'month':
-            return [force_unicode(value)]
+            return [force_text(value)]
 
         return super(MonthField, self).get_prep_lookup(lookup_type, value)
 
     def get_db_prep_value(self, value, connection, prepared=False):
         """Convert to a value usable as a paramter in a query.
         """
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, (bytes, text)):
             return value
 
         if isinstance(value, ttcal.Month):
@@ -94,7 +94,7 @@ class MonthField(models.Field):
         if isinstance(value, ttcal.Month):
             return '%04d-%02d-01' % (value.year, value.month)
 
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, (bytes, text)):
             return value
 
         if isinstance(value, list):
@@ -125,7 +125,7 @@ class MonthField(models.Field):
             return connection.ops.year_lookup_bounds_for_date_field(value)
 
         if lookup_type == 'month':
-            return [force_unicode(value)]
+            return [force_text(value)]
 
         return super(MonthField, self).get_db_prep_lookup(
             lookup_type, value, connection=connection, prepared=prepared)
@@ -143,7 +143,7 @@ class MonthField(models.Field):
         if isinstance(value, datetime.date):
             return ttcal.Month(value.year, value.month)
 
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, (bytes, text)):
             return self._str_to_month(value)
 
         raise ValidationError("Value/month: %r, %r" % (value, type(value)))

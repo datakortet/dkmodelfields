@@ -26,13 +26,13 @@ class YearField(models.Field):
         if not value:
             return None
         
-        if isinstance(value, (int, long)):
+        if isinstance(value, int):
             return ttcal.Year(value)
 
         return value
 
     def get_prep_value(self, value):
-        if isinstance(value, (int, long)):
+        if isinstance(value, int):
             return value
 
         if isinstance(value, ttcal.Year):
@@ -41,7 +41,7 @@ class YearField(models.Field):
         return value
 
     def get_db_prep_value(self, value, connection, prepared=False):
-        if isinstance(value, (int, long)):
+        if isinstance(value, int):
             return value
 
         if isinstance(value, ttcal.Year):

@@ -9,7 +9,7 @@ from django.forms import ValidationError
 from django.forms.utils import flatatt
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 
 
 class DurationInput(TextInput):
@@ -24,13 +24,13 @@ class DurationInput(TextInput):
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
         if value != u'':
             # Only add the 'value' attribute if a value is non-empty.
-            if isinstance(value, int) or isinstance(value, long):
+            if isinstance(value, int):
                 # Database backends serving different types
                 value = ttcal.Duration(seconds=value)
 
             # Otherwise, we've got a timedelta already
 
-            final_attrs['value'] = force_unicode(value)
+            final_attrs['value'] = force_text(value)
         return mark_safe(u'<input%s />' % flatatt(final_attrs))
 
 

@@ -180,7 +180,7 @@ def test_value_to_string():
     assert mf.value_to_string(m) == '2017-12'
 
 
-def test_month_field_year_simple_filter():
+def test_month_field_year_simple_filter(db):
     M.objects.all().delete()
     jan = ttcal.Month(2017, 1)
     M.objects.create(month=jan)

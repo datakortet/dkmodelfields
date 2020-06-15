@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.core.exceptions import ValidationError
+from __future__ import print_function
+from builtins import str as text
 import re
 from django.core import validators
 from django.utils.translation import ugettext_lazy as _
@@ -13,7 +14,7 @@ class StatusValue(object):
     def __init__(self, name=None, verbose=None, categories=()):
         self.name = name.strip()
         self.verbose = verbose.strip()
-        if isinstance(categories, basestring):
+        if isinstance(categories, str):
             self.categories = re.split(r'[,\s]+', categories)
         else:
             self.categories = categories
@@ -76,8 +77,8 @@ class StatusDef(object):
 
     # TODO:  create a custom model field that maps to <select>
 
-    defre = re.compile(ur'''
-    \s*(?P<name>[a-z][-a-z0-9]*)\s*(?P<verbose>[^\#]*)\#\s*\[(?P<categories>[^]]*)\]
+    defre = re.compile(u'''
+    \\s*(?P<name>[a-z][-a-z0-9]*)\\s*(?P<verbose>[^#]*)\\#\\s*\\[(?P<categories>[^\\]]*)\\]
     ''', re.VERBOSE)
 
     # noinspection PyMethodMayBeStatic
@@ -108,10 +109,10 @@ class StatusDef(object):
                              for (k, v) in m.groupdict().items())
                 sval = StatusValue(name=gdict.name,
                                    verbose=gdict.verbose,
-                                   categories=gdict.categories)
+                                   categories=gdict.categories.split(','))
                 defs[sval.name] = sval
             else:  # pragma: nocover
-                print 'error parsing:', repr(line)
+                print('error parsing:', repr(line))
 
         return defs
 
@@ -120,7 +121,9 @@ class StatusDef(object):
         self._defs = self.status.values()
         self._categories = set()
         for d in self._defs:
+            print("D:IN:DEFS:", d)
             for cat in d.categories:
+                print("    CAT:IN:CATEGORIES:", cat)
                 self._categories.add(cat)
         self._cat2status = defaultdict(set)
         for d in self._defs:
@@ -134,6 +137,7 @@ class StatusDef(object):
         return max(len(d.name) for d in self._defs)
 
     def is_category(self, txt):
+        print("IS:CATEGORY:", txt, self._categories, txt in self._categories)
         return txt in self._categories
 
     def category(self, status):
@@ -191,10 +195,10 @@ class StatusField(Field):
         if isinstance(value, StatusValue):
             return value
 
-        if isinstance(value, basestring):
+        if isinstance(value, (bytes, text)):
             if value in self.statusdef.status:
                 return self.statusdef.status[value]
-            raise ValueError("Unknown status: %r", value)
+            raise ValueError("Unknown status: %r" % value)
 
         return value
 
@@ -209,7 +213,7 @@ class StatusField(Field):
         """
         if lookup_type == 'in':
             res = set()
-            if isinstance(value, basestring):
+            if isinstance(value, (bytes, text)):
                 if self.statusdef.is_category(value):
                     res |= self.statusdef.category2status(value)
                 else:

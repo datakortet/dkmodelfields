@@ -2,7 +2,8 @@
 
 """Admin support code for MonthFields.
 """
-
+from __future__ import print_function
+from builtins import str as text
 import ttcal
 from django.forms.fields import CharField
 from django.forms import ValidationError
@@ -22,15 +23,15 @@ class MonthInput(TextInput):
             value = u''
         final_attrs = self.build_attrs(attrs, type='month', name=name)
         if value != u'':
-            # if isinstance(value, (int, long)):
+            # if isinstance(value, int):
             #     value = ttcal.Month(value)
-            if isinstance(value, unicode):
+            if isinstance(value, text):
                 parts = value.split('-')
                 y = int(parts[0])
                 m = int(parts[1])
                 value = ttcal.Month(y, m)
             assert isinstance(value, ttcal.Month), type(value)
-            final_attrs['value'] = unicode(value.format("Y-m"))
+            final_attrs['value'] = text(value.format("Y-m"))
         return mark_safe(u'<input%s />' % flatatt(final_attrs))
 
 
@@ -43,10 +44,10 @@ class MonthField(CharField):
         super(MonthField, self).__init__(*args, **kwargs)
 
     def _str_to_month(self, sval):  # pylint:disable=R0201
-        # type: (basestring) -> ttcal.Month
+        # type: (str) -> ttcal.Month
         # 2008-01
-        if not isinstance(sval, (str, unicode)):
-            print "NOT ISINSTANCE:", repr(sval)
+        if not isinstance(sval, str):
+            print("NOT ISINSTANCE:", repr(sval))
         if not sval.strip():
             return None
         return ttcal.Month.parse(sval)

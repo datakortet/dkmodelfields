@@ -9,7 +9,7 @@
 import datetime
 from django.db import models
 
-from django.utils.encoding import smart_str, smart_unicode
+from django.utils.encoding import smart_str, smart_text
 from dkmodelfields.adminforms import DurationField as DurationFormField
 import ttcal
 
@@ -42,7 +42,7 @@ class DurationField(models.Field):
         """
         if value is None:
             return None  # db NULL
-        if isinstance(value, int) or isinstance(value, long):
+        if isinstance(value, int):
             value = ttcal.Duration(seconds=value)
         return value.toint()
 
@@ -56,7 +56,7 @@ class DurationField(models.Field):
         """
         if value is None:
             return None  # db NULL
-        if isinstance(value, int) or isinstance(value, long):
+        if isinstance(value, int):
             value = ttcal.Duration(seconds=value)
         return value.toint()
 
@@ -77,12 +77,12 @@ class DurationField(models.Field):
         if isinstance(value, datetime.timedelta):
             return ttcal.Duration(value)
 
-        if isinstance(value, int) or isinstance(value, long):
+        if isinstance(value, int):
             return ttcal.Duration(seconds=value)
 
         # Try to parse the value
         str_val = smart_str(value)
-        if isinstance(str_val, basestring):
+        if isinstance(str_val, str):
             try:
                 return ttcal.Duration.parse(str_val)
             except ValueError:  # pragma: nocover
@@ -96,7 +96,7 @@ class DurationField(models.Field):
     def value_to_string(self, obj):
         "Serialize."
         value = self._get_val_from_obj(obj)
-        return smart_unicode(value)
+        return smart_text(value)
 
     def formfield(self, **kwargs):  # pylint:disable=W0221
         "Formfield declaration for admin site."

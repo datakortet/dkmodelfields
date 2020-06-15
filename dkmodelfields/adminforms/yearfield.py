@@ -9,7 +9,7 @@ from django.forms import ValidationError
 from django.forms.utils import flatatt
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 
 
 class YearInput(TextInput):
@@ -20,9 +20,9 @@ class YearInput(TextInput):
             value = u''
         final_attrs = self.build_attrs(attrs, type='number', name=name)
         if value != u'':
-            if isinstance(value, (int, long)):
+            if isinstance(value, int):
                 value = ttcal.Year(value)
-            final_attrs['value'] = force_unicode(value)
+            final_attrs['value'] = force_text(value)
         return mark_safe(u'<input%s />' % flatatt(final_attrs))
 
 
