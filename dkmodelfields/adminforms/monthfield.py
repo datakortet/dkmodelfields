@@ -9,10 +9,12 @@ from django.forms.fields import CharField
 from django.forms import ValidationError
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
-try:
-    from django.forms.utils import flatatt  # 1.8
-except ImportError:
-    from django.forms.util import flatatt   # 1.7
+try:   # pragma: nocover
+    # 1.8
+    from django.forms.utils import flatatt
+except ImportError:   # pragma: nocover
+    # 1.7
+    from django.forms.util import flatatt
 
 
 class MonthInput(TextInput):
@@ -56,7 +58,7 @@ class MonthField(CharField):
         super(MonthField, self).clean(value)
         try:
             return self._str_to_month(value)
-        except:
+        except:  # pragma: nocover
             raise ValidationError('Invalid month: %r' % value)
 
     def to_python(self, value):  # pylint:disable=R0201
@@ -64,5 +66,5 @@ class MonthField(CharField):
         """
         try:
             return self._str_to_month(value)
-        except:
+        except:  # pragma: nocover
             raise ValidationError('Invalid month: %r' % value)

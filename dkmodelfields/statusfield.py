@@ -3,6 +3,7 @@ from __future__ import print_function
 from builtins import str as text
 import re
 from django.core import validators
+from django.forms import ChoiceField
 from django.utils.translation import ugettext_lazy as _
 from dk.collections import pset
 from collections import defaultdict
@@ -14,13 +15,18 @@ class StatusValue(object):
     def __init__(self, name=None, verbose=None, categories=()):
         self.name = name.strip()
         self.verbose = verbose.strip()
-        if isinstance(categories, str):
+        if isinstance(categories, (bytes, text)):
             self.categories = re.split(r'[,\s]+', categories)
         else:
             self.categories = categories
 
+    def __len__(self):   # needed due to the maxlength validator
+        return len(self.name)
+
+    # NOTE: unicode and str must both return the 'value' part of the select
+    #       widget, i.e. self.name
     def __unicode__(self):
-        return self.verbose
+        return self.name
 
     def __str__(self):
         return self.name
@@ -109,7 +115,7 @@ class StatusDef(object):
                              for (k, v) in m.groupdict().items())
                 sval = StatusValue(name=gdict.name,
                                    verbose=gdict.verbose,
-                                   categories=gdict.categories.split(','))
+                                   categories=gdict.categories)
                 defs[sval.name] = sval
             else:  # pragma: nocover
                 print('error parsing:', repr(line))
@@ -121,9 +127,7 @@ class StatusDef(object):
         self._defs = self.status.values()
         self._categories = set()
         for d in self._defs:
-            print("D:IN:DEFS:", d)
             for cat in d.categories:
-                print("    CAT:IN:CATEGORIES:", cat)
                 self._categories.add(cat)
         self._cat2status = defaultdict(set)
         for d in self._defs:
@@ -137,13 +141,18 @@ class StatusDef(object):
         return max(len(d.name) for d in self._defs)
 
     def is_category(self, txt):
-        print("IS:CATEGORY:", txt, self._categories, txt in self._categories)
         return txt in self._categories
 
     def category(self, status):
         """Return the category that status belongs to.
+           Assumes ther is only one.
         """
-        return self.status[status].category
+        return self.status[status].categories[0]
+
+    def categories(self, status):
+        """Return the categories that status belongs to.
+        """
+        return self.status[status].categories
 
     def category2status(self, category):
         """Return all statuses belonging to `category`.
@@ -174,14 +183,11 @@ class StatusField(Field):
         self.txt = args[0] if args else ""
         self.statusdef = StatusDef(self.txt)
         self.max_length = kw['max_length'] = kw.get('max_length', self.statusdef.namelength)
-        kw['choices'] = self.statusdef.options
         super(StatusField, self).__init__(**kw)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
         
     def deconstruct(self):
         name, path, args, kwargs = super(StatusField, self).deconstruct()
-        # del kwargs['max_length']
-        # print "OPTIONS:", self.statusdef.options
         kwargs['choices'] = self.statusdef.options
         return name, path, [self.txt], kwargs
 
@@ -218,6 +224,8 @@ class StatusField(Field):
                     res |= self.statusdef.category2status(value)
                 else:
                     res.add(value)
+            elif value is None:
+                return [self.get_prep_value(None)]
             else:
                 for v in value:
                     if self.statusdef.is_category(v):
@@ -242,6 +250,9 @@ class StatusField(Field):
         # Passing max_length to forms.CharField means that the value's length
         # will be validated twice. This is considered acceptable since we want
         # the value in the form field (to pass into widget for example).
-        defaults = {'max_length': self.max_length}
+        defaults = {
+            'form_class': ChoiceField,
+            'choices': self.statusdef.options,
+        }
         defaults.update(kwargs)
         return super(StatusField, self).formfield(**defaults)

@@ -66,6 +66,12 @@ def test_month_form_field_strval(monthform):
         '</tr>'
 
 
+def test_adminform_topython():
+    mf = MonthField()
+    with pytest.raises(ValidationError):
+        mf.to_python(3.14)
+
+
 # def test_month_form_field_intval(monthform):
 #     f = monthform({'mnth': 201607})
 #     assert str(f) == \

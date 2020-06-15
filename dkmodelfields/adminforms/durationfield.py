@@ -48,7 +48,7 @@ class DurationField(Field):
         super(DurationField, self).clean(value)
         try:
             return ttcal.Duration.parse(value)
-        except ValueError:
+        except (ValueError, TypeError):
             raise ValidationError('Enter a valid duration.')
 
     def to_python(self, value):  # pylint:disable=R0201
@@ -56,5 +56,5 @@ class DurationField(Field):
         """
         try:
             return ttcal.Duration.parse(value)
-        except ValueError:
+        except (ValueError, TypeError):
             raise ValidationError('Enter a valid duration.')

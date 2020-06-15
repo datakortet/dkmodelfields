@@ -38,7 +38,7 @@ class YearField(Field):
         super(YearField, self).clean(value)
         try:
             return ttcal.Year(int(value))
-        except:
+        except:  # pragma: nocover
             raise ValidationError('Invalid year: %r' % value)
 
     def to_python(self, value):  # pylint:disable=R0201
@@ -46,5 +46,5 @@ class YearField(Field):
         """
         try:
             return ttcal.Year(int(value))
-        except:
+        except:  # pragma: nocover
             raise ValidationError('Invalid year: %r' % value)

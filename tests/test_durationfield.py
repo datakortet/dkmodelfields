@@ -2,10 +2,63 @@
 from datetime import timedelta, datetime
 
 import pytest
+import ttcal
+from django.core.exceptions import ValidationError
 from django.db import connection
-
+from django.forms import Form
 from ttcal import Duration
 from dkmodelfields import DurationField
+from dkmodelfields import adminforms
+
+
+@pytest.fixture
+def durationform():
+    class DurationForm(Form):
+        duration = adminforms.DurationField(label='Duration')
+    return DurationForm
+
+
+def test_formfield1():
+    df = DurationField()
+    assert isinstance(df.formfield(), adminforms.durationfield.DurationField)
+    assert df.db_type(connection) == 'BIGINT'
+
+
+def test_duration_form_field(durationform):
+    f = durationform()
+    assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><input id="id_duration" name="duration" type="text" /></td></tr>'''
+
+
+def test_duration_form_field_empty(durationform):
+    f = durationform({'duration': u''})
+    assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><ul class="errorlist"><li>This field is required.</li></ul><input id="id_duration" name="duration" type="text" /></td></tr>'''
+
+
+def test_duration_form_field_strval(durationform):
+    f = durationform({'duration': u'2:20:00'})
+    assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><input id="id_duration" name="duration" type="text" value="2:20:00" /></td></tr>'''
+
+
+def test_duration_form_field_duration_val(durationform):
+    f = durationform({'duration': ttcal.Duration.parse(u'2:20:00')})
+    assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><ul class="errorlist"><li>Enter a valid duration.</li></ul><input id="id_duration" name="duration" type="text" /></td></tr>'''
+
+
+def test_duration_form_field_invalid(durationform):
+    f = durationform({'duration': u'asdf'})
+    f.full_clean()
+    assert f.clean() == {
+        'duration': ttcal.Duration()
+    }
+
+
+def test_adminform_clean():
+    df = adminforms.DurationField()
+    with pytest.raises(ValidationError):
+        assert df.clean(['3.14'])
+
+    with pytest.raises(ValidationError):
+        assert df.to_python(3.14)
 
 
 def test_create():

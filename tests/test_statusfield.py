@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
 from django.db import connection
+from django.forms import ChoiceField
+
 from dkmodelfields.statusfield import StatusField, StatusValue
 from django.utils.translation import ugettext_lazy as _
 
@@ -16,6 +18,7 @@ def test_status_field():
         cancelled   Ordren er kansellert                # [done]
         error       Det har oppstått en feil            # [err]
         credit      Ordren er kreditert                 # [done]
+        foo         Bar, baz                            # [bar,baz]
         =========== =================================== =======================
         @end-saleStatusdef
     """
@@ -30,8 +33,21 @@ def test_status_field():
     with pytest.raises(ValueError):
         sf.to_python('asdf')
 
+    sd = sf.statusdef
+    assert sd.category('sale') == u'done'
+    assert sd.categories('sale') == [u'done']
+    assert sd.categories('foo') == [u'bar', u'baz']
+    assert sd.valid_status('sale')
+
     assert set(sf.get_prep_lookup('in', 'done')) == ({'cancelled', 'credit', 'sale'})
-    sv = StatusValue(name='cancelled', verbose='Ordren er kansellert', categories=('done'))
+    assert set(sf.get_prep_lookup('in', 'new')) == ({'new'})
+    assert set(sf.get_prep_lookup('in', ['new', 'err'])) == ({'new', 'error'})
+    assert set(sf.get_prep_lookup('in', None)) == ({None})
+    sv = StatusValue(name='cancelled', verbose='Ordren er kansellert', categories=('done', 'ready'))
+    assert sv.__unicode__() == sv.name
+    assert str(sv) == sv.name
+    assert repr(sv).startswith('StatusValue(')
+
     assert sf.get_prep_lookup('in', (sv,)) == ['cancelled']
     assert sf.get_prep_lookup('', 'init') == 'init'
     assert sf.get_prep_lookup('exact', 'init') == 'init'
@@ -51,5 +67,8 @@ def test_status_field():
             (u'cancelled',   u'Ordren er kansellert'),
             (u'error',       u'Det har oppstått en feil'),
             (u'credit',      u'Ordren er kreditert'),
+            (u'foo',         u'Bar, baz'),
         ]
     )
+
+    assert isinstance(sf.formfield(), ChoiceField)
