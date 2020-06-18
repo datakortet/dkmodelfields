@@ -29,7 +29,7 @@ class DurationInput(TextInput):
                 # Database backends serving different types
                 value = ttcal.Duration(seconds=value)
 
-            if sys.version_info < (3,) and isinstance(value, long):
+            if sys.version_info < (3,) and isinstance(value, long):  # pragma: nocover
                 # Database backends serving different types
                 value = ttcal.Duration(seconds=value)
 

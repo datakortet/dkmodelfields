@@ -82,7 +82,7 @@ class DurationField(models.Field):
         if isinstance(value, int):
             return ttcal.Duration(seconds=value)
 
-        if sys.version_info < (3,) and isinstance(value, long):
+        if sys.version_info < (3,) and isinstance(value, long):  # pragma: nocover
             return ttcal.Duration(seconds=value)
 
         # Try to parse the value
