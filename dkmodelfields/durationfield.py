@@ -7,6 +7,8 @@
 
 
 import datetime
+import sys
+
 from django.db import models
 
 from django.utils.encoding import smart_str, smart_text
@@ -78,6 +80,9 @@ class DurationField(models.Field):
             return ttcal.Duration(value)
 
         if isinstance(value, int):
+            return ttcal.Duration(seconds=value)
+
+        if sys.version_info < (3,) and isinstance(value, long):
             return ttcal.Duration(seconds=value)
 
         # Try to parse the value

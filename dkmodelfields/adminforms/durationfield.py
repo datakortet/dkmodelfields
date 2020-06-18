@@ -2,6 +2,7 @@
 
 """Admin support code for DurationFields.
 """
+import sys
 
 import ttcal
 from django.forms.fields import Field
@@ -25,6 +26,10 @@ class DurationInput(TextInput):
         if value != u'':
             # Only add the 'value' attribute if a value is non-empty.
             if isinstance(value, int):
+                # Database backends serving different types
+                value = ttcal.Duration(seconds=value)
+
+            if sys.version_info < (3,) and isinstance(value, long):
                 # Database backends serving different types
                 value = ttcal.Duration(seconds=value)
 

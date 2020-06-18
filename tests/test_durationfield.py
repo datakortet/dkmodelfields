@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 from datetime import timedelta, datetime
 
 import pytest
@@ -93,6 +94,8 @@ def test_to_python():
     assert df.to_python(60*60*3) == Duration(hours=3, minutes=0, seconds=0)
     assert df.to_python('2:20:0') == Duration(hours=2, minutes=20)
     assert df.to_python('asdf') == Duration()
+    if sys.version_info < (3,):
+        assert df.to_python(long(687876)) == Duration(hours=191, minutes=4, seconds=36)
 
 
 def test_formfield():
