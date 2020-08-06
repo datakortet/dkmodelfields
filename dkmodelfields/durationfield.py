@@ -9,19 +9,17 @@
 import datetime
 import sys
 
+import ttcal
 from django.db import models
-
 from django.utils.encoding import smart_str, smart_text
 from dkmodelfields.adminforms import DurationField as DurationFormField
-import ttcal
+from six import with_metaclass
 
 
-class DurationField(models.Field):
+class DurationField(with_metaclass(models.SubfieldBase, models.Field)):
     """A duration field is used.
     """
     description = "A duration of time"
-
-    __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
         super(DurationField, self).__init__(*args, **kwargs)

@@ -5,16 +5,15 @@
 
 # pylint:disable=R0904
 
-from django.db import models
 import ttcal
+from django.db import models
 from dkmodelfields.adminforms import YearField as YearFormField
+from six import with_metaclass
 
 
-class YearField(models.Field):
+class YearField(with_metaclass(models.SubfieldBase, models.Field)):
     """MySQL YEAR(4) <-> ttcal.Year() mapping.
     """
-
-    __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
         super(YearField, self).__init__(*args, **kwargs)

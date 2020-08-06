@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-from builtins import str as text
+
 import re
+from collections import defaultdict
+
+from builtins import str as text
 from django.core import validators
+from django.db import models
 from django.forms import ChoiceField
+from django.utils.six import with_metaclass
 from django.utils.translation import ugettext_lazy as _
 from dk.collections import pset
-from collections import defaultdict
-from django.db.models.fields import Field
-from django.db import models
 
 
 class StatusValue(object):
@@ -172,11 +174,9 @@ class StatusDef(object):
         return [(name, gdict.verbose) for name, gdict in self.status]
 
 
-class StatusField(Field):
+class StatusField(with_metaclass(models.SubfieldBase, models.Field)):
     """Character status field.
     """
-    __metaclass__ = models.SubfieldBase
-
     description = _("Status field")
 
     def __init__(self, *args, **kw):

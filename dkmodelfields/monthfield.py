@@ -3,29 +3,26 @@
 """A database field class that goes with ttcal.Year.
 """
 
+import datetime
+
+import ttcal
 # pylint:disable=R0904
 # R0904 too many public methods
 from builtins import str as text
-import datetime
-from django.db import models, connection as cn
+from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
+from django.db import models, connection as cn
 # from django.contrib.admin.filterspecs import FilterSpec
 from django.utils.encoding import force_text
-
-import ttcal
-from dkmodelfields.adminforms import MonthField as MonthFormField
-
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin import SimpleListFilter
+from dkmodelfields.adminforms import MonthField as MonthFormField
+from six import with_metaclass
 
 
-class MonthField(models.Field):
+class MonthField(with_metaclass(models.SubfieldBase, models.Field)):
     """MySQL date <-> ttcal.Month() mapping.
        Maps the month to the first day of the month.
     """
-
-    __metaclass__ = models.SubfieldBase
-
     description = "A generic Month field"
 
     def __init__(self, *args, **kwargs):
