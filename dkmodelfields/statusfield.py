@@ -202,6 +202,8 @@ class StatusField(with_metaclass(models.SubfieldBase, models.Field)):
             return value
 
         if isinstance(value, (bytes, text)):
+            if type(value) is bytes:
+                value = str(value, "utf-8")
             if value in self.statusdef.status:
                 return self.statusdef.status[value]
             raise ValueError("Unknown status: %r" % value)
