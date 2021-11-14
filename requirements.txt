@@ -1,5 +1,5 @@
 dk>=1.0.2                      # WARNING[dkt]: dk>=1.0.2 is not sepcified in requirements-external.txt
-django==1.8.19
+django==2.2.24
 future==0.18.1
 ttcal>=1.0.2                   # WARNING[dkt]: ttcal>=1.0.2 is not sepcified in requirements-external.txt
 py==1.8.0
