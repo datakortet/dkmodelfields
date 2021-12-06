@@ -1,0 +1,11 @@
+build:
+  django: 1.8.19
+  future: 0.18.1
+  django-localflavor: "1.3"
+
+tests:
+  pytest-django: 3.10.0
+
+local:
+  - dk
+  - ttcal
