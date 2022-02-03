@@ -1,25 +1,40 @@
-# -*- coding: utf-8 -*-
-
-"""A database field class that goes with ttcal.Year.
+"""
+A database field class that goes with ttcal.Year.
 """
 
 import datetime
 
 import ttcal
-# pylint:disable=R0904
-# R0904 too many public methods
-from builtins import str as text
 from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
 from django.db import models, connection as cn
-# from django.contrib.admin.filterspecs import FilterSpec
+from django.db.models import Transform, IntegerField
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from dkmodelfields.adminforms import MonthField as MonthFormField
-from six import with_metaclass
 
 
-class MonthField(with_metaclass(models.SubfieldBase, models.Field)):
+class Month2YearTransform(Transform):
+    """Handles __year filter on month fields.
+
+       I.e.::
+
+           MyModel.objects(my_month_field__year__gt=2022)
+
+    """
+    lookup_name = 'year'
+    function = 'YEAR'
+
+    @property
+    def output_field(self):
+        return IntegerField()
+
+    def as_sql(self, compiler, connection):
+        lhs, lhs_params = compiler.compile(self.lhs)
+        return '%s(%s)' % (self.function, lhs), lhs_params
+
+
+class MonthField(models.Field, metaclass=models.SubfieldBase):
     """MySQL date <-> ttcal.Month() mapping.
        Maps the month to the first day of the month.
     """
@@ -29,18 +44,16 @@ class MonthField(with_metaclass(models.SubfieldBase, models.Field)):
         super(MonthField, self).__init__(*args, **kwargs)
         self.month_year_filter = True
 
-    # # needed in Django 1.7 (? this is default implementation..)
-    # def deconstruct(self):
-    #     name, path, args, kwargs = super(MonthField, self).deconstruct()
-    #     return name, path, args, kwargs
-
     def db_type(self, connection):
         return 'DATE'
 
+    # converts python object to value that can be used in db-queries.
     def get_prep_value(self, value):
         """Convert to a value usable as a paramter in a query.
         """
-        if isinstance(value, (bytes, text)):
+        value = super().get_prep_value(value)
+
+        if isinstance(value, (bytes, str)):
             return value
 
         if isinstance(value, ttcal.Month):
@@ -71,19 +84,17 @@ class MonthField(with_metaclass(models.SubfieldBase, models.Field)):
 
         return super(MonthField, self).get_prep_lookup(lookup_type, value)
 
-    def get_db_prep_value(self, value, connection, prepared=False):
-        """Convert to a value usable as a paramter in a query.
+    def get_transform(self, lookup_name):
+        """Handles __year filter on month fields.
+
+           I.e.::
+
+               MyModel.objects(my_month_field__year__gt=2022)
+
         """
-        if isinstance(value, (bytes, text)):
-            return value
-
-        if isinstance(value, ttcal.Month):
-            return '%04d-%02d-01' % (value.year, value.month)
-
-        if isinstance(value, list):
-            return '%04d-%02d-01' % (value[0].year, value[0].month)
-
-        return value
+        if lookup_name == 'year':
+            return Month2YearTransform
+        return super().get_transform(lookup_name)
 
     def get_db_prep_save(self, value, connection):
         """Convert to a value suitable for saving.
@@ -91,7 +102,7 @@ class MonthField(with_metaclass(models.SubfieldBase, models.Field)):
         if isinstance(value, ttcal.Month):
             return '%04d-%02d-01' % (value.year, value.month)
 
-        if isinstance(value, (bytes, text)):
+        if isinstance(value, (bytes, str)):
             return value
 
         if isinstance(value, list):
@@ -127,6 +138,7 @@ class MonthField(with_metaclass(models.SubfieldBase, models.Field)):
         return super(MonthField, self).get_db_prep_lookup(
             lookup_type, value, connection=connection, prepared=prepared)
 
+    # converts from a database value to a python value
     def to_python(self, value):
         """Converts the input ``value`` into a ttcal.Month instance,
            raising ValueError if the data can't be converted. 
@@ -140,7 +152,7 @@ class MonthField(with_metaclass(models.SubfieldBase, models.Field)):
         if isinstance(value, datetime.date):
             return ttcal.Month(value.year, value.month)
 
-        if isinstance(value, (bytes, text)):
+        if isinstance(value, (bytes, str)):
             return self._str_to_month(value)
 
         raise ValidationError("Value/month: %r, %r" % (value, type(value)))
@@ -169,6 +181,7 @@ class MonthField(with_metaclass(models.SubfieldBase, models.Field)):
         return super(MonthField, self).formfield(**defaults)
 
 
+# for admin..
 class MonthFieldYearSimpleFilter(SimpleListFilter):
     title = _(u'år')
 
