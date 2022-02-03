@@ -1,7 +1,8 @@
-dk>=1.0.2                      # WARNING[dkt]: dk>=1.0.2 is not sepcified in requirements-external.txt
-django==1.8.19
-future==0.18.1
-ttcal>=1.0.2                   # WARNING[dkt]: ttcal>=1.0.2 is not sepcified in requirements-external.txt
+dk>=1.0.2
+django==1.8.19              ; python_version < '3.6'
+django==1.9.13              ; python_version >= '3.6'
+future==0.18.2
+ttcal>=1.0.2
 py==1.8.0
 django-localflavor==1.3
 pytest-django==3.10.0
