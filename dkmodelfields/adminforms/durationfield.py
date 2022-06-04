@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
-"""Admin support code for DurationFields.
 """
-import sys
-
+Admin support code for DurationFields.
+"""
 import ttcal
 from django.forms.fields import Field
 from django.forms import ValidationError
@@ -21,15 +18,11 @@ class DurationInput(TextInput):
            {"for": label_for, "label": option_label, "cb": rendered_cb})
         """
         if value is None:
-            value = u''
+            value = ''
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
-        if value != u'':
+        if value != '':
             # Only add the 'value' attribute if a value is non-empty.
             if isinstance(value, int):
-                # Database backends serving different types
-                value = ttcal.Duration(seconds=value)
-
-            if sys.version_info < (3,) and isinstance(value, long):  # pragma: nocover
                 # Database backends serving different types
                 value = ttcal.Duration(seconds=value)
 

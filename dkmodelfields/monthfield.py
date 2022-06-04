@@ -4,6 +4,7 @@ A database field class that goes with ttcal.Year.
 
 import datetime
 
+import django
 import ttcal
 from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
@@ -142,6 +143,8 @@ class MonthField(models.Field, Creator):
         if lookup_type == 'month':
             return [force_text(value)]
 
+        if django.VERSION >= (1, 10):
+            return value
         return super(MonthField, self).get_db_prep_lookup(
             lookup_type, value, connection=connection, prepared=prepared)
 

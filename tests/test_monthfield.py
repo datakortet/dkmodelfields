@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import django
 import pytest
 from datetime import date, timedelta
 
@@ -16,7 +17,7 @@ from testapp.models import M, AM
 @pytest.fixture
 def monthform():
     class MonthForm(Form):
-        mnth = adminforms.MonthField(label='Month')
+        mnth = adminforms.MonthField(label='Month', required=False)
     return MonthForm
 
 
@@ -38,8 +39,9 @@ def test_month_form_field(monthform):
                      '</tr>'
 
 
+@pytest.mark.skipif(django.VERSION[:2] >= (1, 10), reason="field set to not required for dj19/110 test compatibility")
 def test_month_form_field_empty(monthform):
-    f = monthform({'mnth': u''})
+    f = monthform({'mnth': ''})
     assert str(f) == '<tr>' \
                      '<th>' \
                      '<label for="id_mnth">Month:</label>' \
@@ -150,12 +152,14 @@ def test_get_db_prep_lookup():
        '2017-01-01',
        '2017-12-31',
    ]
-    assert mf.get_db_prep_lookup('month', ttcal.Month(2016, 4), connection) == ['2016-04']
 
-    assert mf.get_db_prep_lookup('gt', ttcal.Month(2016, 4), connection) == ['2016-04-01']
+    if django.VERSION[:2] < (1, 10):
+        assert mf.get_db_prep_lookup('month', ttcal.Month(2016, 4), connection) == ['2016-04']
 
-    with pytest.raises(ValueError):
-        mf.get_db_prep_lookup('year', (), connection)
+        assert mf.get_db_prep_lookup('gt', ttcal.Month(2016, 4), connection) == ['2016-04-01']
+
+        with pytest.raises(ValueError):
+            mf.get_db_prep_lookup('year', (), connection)
 
 
 def test_to_python():

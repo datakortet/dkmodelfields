@@ -17,7 +17,7 @@ from testapp.models import Y
 @pytest.fixture
 def yearform():
     class YearForm(Form):
-        yr = adminforms.YearField(label="Year")
+        yr = adminforms.YearField(label="Year", required=False)
     return YearForm
 
 
