@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-
-"""A database field class that goes with ttcal.Year.
+"""
+A database field class that goes with ttcal.Year.
 """
 
 # pylint:disable=R0904
@@ -8,10 +7,10 @@
 import ttcal
 from django.db import models
 from dkmodelfields.adminforms import YearField as YearFormField
-from six import with_metaclass
+from .creator import Creator
 
 
-class YearField(with_metaclass(models.SubfieldBase, models.Field)):
+class YearField(models.Field, Creator):
     """MySQL YEAR(4) <-> ttcal.Year() mapping.
     """
 
@@ -20,6 +19,12 @@ class YearField(with_metaclass(models.SubfieldBase, models.Field)):
 
     def db_type(self, connection):
         return 'YEAR(4)'
+
+    def from_db_value(self, value, expression, connection, context):
+        """Converts a value as returned by the database to a Python object.
+           It is the reverse of get_prep_value().
+        """
+        return self.to_python(value)
 
     def to_python(self, value):
         if not value:

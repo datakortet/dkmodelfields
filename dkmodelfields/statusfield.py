@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function
-
 import re
 from collections import defaultdict
 
@@ -8,9 +5,9 @@ from builtins import str as text
 from django.core import validators
 from django.db import models
 from django.forms import ChoiceField
-from django.utils.six import with_metaclass
 from django.utils.translation import ugettext_lazy as _
 from dk.collections import pset
+from .creator import Creator
 
 
 class StatusValue(object):
@@ -174,7 +171,7 @@ class StatusDef(object):
         return [(name, gdict.verbose) for name, gdict in self.status]
 
 
-class StatusField(with_metaclass(models.SubfieldBase, models.Field)):
+class StatusField(models.Field, Creator):
     """Character status field.
     """
     description = _("Status field")
@@ -190,6 +187,12 @@ class StatusField(with_metaclass(models.SubfieldBase, models.Field)):
         name, path, args, kwargs = super(StatusField, self).deconstruct()
         kwargs['choices'] = self.statusdef.options
         return name, path, [self.txt], kwargs
+
+    def from_db_value(self, value, expression, connection, context):
+        """Converts a value as returned by the database to a Python object.
+           It is the reverse of get_prep_value().
+        """
+        return self.to_python(value)
 
     def to_python(self, value):
         """Converts the input ``value`` into a StatusValue instance,

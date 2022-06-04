@@ -12,6 +12,7 @@ from django.db.models import Transform, IntegerField
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from dkmodelfields.adminforms import MonthField as MonthFormField
+from .creator import Creator
 
 
 class Month2YearTransform(Transform):
@@ -32,22 +33,6 @@ class Month2YearTransform(Transform):
     def as_sql(self, compiler, connection, function=None, template=None):
         lhs, lhs_params = compiler.compile(self.lhs)
         return '%s(%s)' % (self.function, lhs), lhs_params
-
-
-class Creator(object):
-    """
-    A placeholder class that provides a way to set the attribute on the model.
-    """
-    def __init__(self, field):
-        self.field = field
-
-    def __get__(self, obj, type=None):
-        if obj is None:
-            return self
-        return obj.__dict__[self.field.name]
-
-    def __set__(self, obj, value):
-        obj.__dict__[self.field.name] = self.field.to_python(value)
 
 
 class MonthField(models.Field, Creator):

@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-
-"""Based on https://github.com/johnpaulett/django-durationfield.
 """
-
+Based on https://github.com/johnpaulett/django-durationfield.
+"""
 # pylint:disable=R0904
-
-
 import datetime
 import sys
 
@@ -13,10 +9,10 @@ import ttcal
 from django.db import models
 from django.utils.encoding import smart_str, smart_text
 from dkmodelfields.adminforms import DurationField as DurationFormField
-from six import with_metaclass
+from .creator import Creator
 
 
-class DurationField(with_metaclass(models.SubfieldBase, models.Field)):
+class DurationField(models.Field, Creator):
     """A duration field is used.
     """
     description = "A duration of time"
@@ -59,6 +55,12 @@ class DurationField(with_metaclass(models.SubfieldBase, models.Field)):
         if isinstance(value, int):
             value = ttcal.Duration(seconds=value)
         return value.toint()
+
+    def from_db_value(self, value, expression, connection, context):
+        """Converts a value as returned by the database to a Python object.
+           It is the reverse of get_prep_value().
+        """
+        return self.to_python(value)
 
     def to_python(self, value):
         """Converts the input ``value`` into the ttcal.Duration data type,
