@@ -8,15 +8,15 @@ from dkmodelfields import MonthField, YearField
 class M(models.Model):
     month = MonthField()
 
-    def __unicode__(self):
-        return unicode(self.month)
+    def __str__(self):
+        return str(self.month)
 
 
 class Y(models.Model):
     yr = YearField()
 
-    def __unicode__(self):
-        return unicode(self.yr)
+    def __str__(self):
+        return str(self.yr)
 
 
 class AM(admin.ModelAdmin):

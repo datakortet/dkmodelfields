@@ -103,14 +103,14 @@ def test_get_prep_value():
 def test_get_prep_lookup():
     mf = MonthField()
     assert mf.get_prep_lookup('year', '2016') == [
-        date(2016, 1, 1),
-        date(2016, 12, 31)
+        '2016-01-01',
+        '2016-12-31',
     ]
     assert mf.get_prep_lookup('year', ttcal.Year(2016)) == [
-        date(2016, 1, 1),
-        date(2016, 12, 31)
+        '2016-01-01',
+        '2016-12-31',
     ]
-    assert mf.get_prep_lookup('month', ttcal.Month(2016, 4)) == [u'2016-04']
+    assert mf.get_prep_lookup('month', ttcal.Month(2016, 4)) == ['2016-04']
 
     with pytest.raises(ValueError):
         mf.get_prep_lookup('year', 'XX')
@@ -118,41 +118,41 @@ def test_get_prep_lookup():
 
 def test_get_db_prep_value():
     mf = MonthField()
-    assert mf.get_db_prep_value('2016-04', None) == '2016-04'
-    assert mf.get_db_prep_value(ttcal.Month(2016, 4), None) == '2016-04-01'
+    assert mf.get_db_prep_value('2016-04', None, False) == '2016-04'
+    assert mf.get_db_prep_value(ttcal.Month(2016, 4), None, False) == '2016-04-01'
     day = date(2015, 6, 1)
     nextday = day + timedelta(days=1)
-    assert mf.get_db_prep_value([day, nextday], None) == '2015-06-01'
-    assert mf.get_db_prep_value({}, connection) == {}
+    assert mf.get_db_prep_value([day, nextday], None, False) == '2015-06-01'
+    assert mf.get_db_prep_value({}, connection, False) == {}
 
 
 def test_get_db_prep_lookup():
     mf = MonthField()
     assert mf.get_db_prep_lookup('year', '2016', connection) == [
-        date(2016, 1, 1),
-        date(2016, 12, 31)
+        '2016-01-01',
+        '2016-12-31',
     ]
     assert mf.get_db_prep_lookup('year', 2016, connection) == [
-        date(2016, 1, 1),
-        date(2016, 12, 31)
+        '2016-01-01',
+        '2016-12-31',
     ]
 
     assert mf.get_db_prep_lookup('year', ttcal.Year(2016), connection) == [
-        date(2016, 1, 1),
-        date(2016, 12, 31)
+        '2016-01-01',
+        '2016-12-31',
     ]
     assert mf.get_db_prep_lookup('year', [date(2017, 1, 1), date(2017, 12, 31)], connection) == [
-        date(2017, 1, 1),
-        date(2017, 12, 31)
+        '2017-01-01',
+        '2017-12-31',
     ]
     assert mf.get_db_prep_lookup('year', ['2017-01-01 0:00:00',
                                           '2017-12-31 0:00:00'], connection) == [
-       date(2017, 1, 1),
-       date(2017, 12, 31)
+       '2017-01-01',
+       '2017-12-31',
    ]
-    assert mf.get_db_prep_lookup('month', ttcal.Month(2016, 4), connection) == [u'2016-04']
+    assert mf.get_db_prep_lookup('month', ttcal.Month(2016, 4), connection) == ['2016-04']
 
-    assert mf.get_db_prep_lookup('gt', ttcal.Month(2016, 4), connection) == [u'2016-04-01']
+    assert mf.get_db_prep_lookup('gt', ttcal.Month(2016, 4), connection) == ['2016-04-01']
 
     with pytest.raises(ValueError):
         mf.get_db_prep_lookup('year', (), connection)

@@ -29,7 +29,7 @@ class Month2YearTransform(Transform):
     def output_field(self):
         return IntegerField()
 
-    def as_sql(self, compiler, connection):
+    def as_sql(self, compiler, connection, function=None, template=None):
         lhs, lhs_params = compiler.compile(self.lhs)
         return '%s(%s)' % (self.function, lhs), lhs_params
 
@@ -50,7 +50,7 @@ class Creator(object):
         obj.__dict__[self.field.name] = self.field.to_python(value)
 
 
-class MonthField(models.Field, metaclass=models.SubfieldBase):
+class MonthField(models.Field, Creator):
     """MySQL date <-> ttcal.Month() mapping.
        Maps the month to the first day of the month.
     """
@@ -62,6 +62,12 @@ class MonthField(models.Field, metaclass=models.SubfieldBase):
 
     def db_type(self, connection):
         return 'DATE'
+
+    def from_db_value(self, value, expression, connection, context):
+        """Converts a value as returned by the database to a Python object.
+           It is the reverse of get_prep_value().
+        """
+        return self.to_python(value)
 
     # converts python object to value that can be used in db-queries.
     def get_prep_value(self, value):
@@ -173,8 +179,8 @@ class MonthField(models.Field, metaclass=models.SubfieldBase):
 
         raise ValidationError("Value/month: %r, %r" % (value, type(value)))
 
-    def get_db_prep_value(self, value, connection, prepared):
-        return self.to_python(value)
+    # def get_db_prep_value(self, value, connection, prepared):
+    #     return self.to_python(value)
 
     def _str_to_month(self, sval):  # pylint:disable=R0201
         # 2008-01
