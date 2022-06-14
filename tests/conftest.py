@@ -34,7 +34,7 @@ def pytest_configure():
             'django.contrib.admin',
             'django.contrib.sites',
             'dkmodelfields',
-            'testapp',
+            'testapp_dkmodelfields',
         ),
     )
     # Need this line to avoid: AppRegistryNotReady: Models aren't loaded yet.

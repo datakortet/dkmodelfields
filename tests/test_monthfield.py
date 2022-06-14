@@ -11,7 +11,7 @@ import ttcal
 from dkmodelfields import MonthField
 from dkmodelfields import adminforms
 from dkmodelfields.monthfield import MonthFieldYearSimpleFilter
-from testapp.models import M, AM
+from testapp_dkmodelfields.models import M, AM
 
 
 @pytest.fixture
