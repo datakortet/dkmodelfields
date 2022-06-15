@@ -77,4 +77,6 @@ def test_status_field():
 
 def test_s_model(db):
     s = S.objects.create()
-    assert type(s.status) == str
+    a = S.objects.get(id=s.id)
+    assert isinstance(a.status, StatusValue)
+    assert isinstance(s.status, StatusValue)
