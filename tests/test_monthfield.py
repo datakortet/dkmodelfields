@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import django
 import pytest
 from datetime import date, timedelta
@@ -39,20 +40,20 @@ def test_month_form_field(monthform):
                      '</tr>'
 
 
-@pytest.mark.skipif(django.VERSION[:2] >= (1, 10), reason="field set to not required for dj19/110 test compatibility")
-def test_month_form_field_empty(monthform):
-    f = monthform({'mnth': ''})
-    assert str(f) == '<tr>' \
-                     '<th>' \
-                     '<label for="id_mnth">Month:</label>' \
-                     '</th>' \
-                     '<td>' \
-                     '<ul class="errorlist">' \
-                     '<li>This field is required.</li>' \
-                     '</ul>' \
-                     '<input id="id_mnth" name="mnth" type="month" />' \
-                     '</td>' \
-                     '</tr>'
+# @pytest.mark.skipif(django.VERSION[:2] >= (1, 10), reason="field set to not required for dj19/110 test compatibility")
+# def test_month_form_field_empty(monthform):
+#     f = monthform({'mnth': ''})
+#     assert str(f) == '<tr>' \
+#                      '<th>' \
+#                      '<label for="id_mnth">Month:</label>' \
+#                      '</th>' \
+#                      '<td>' \
+#                      '<ul class="errorlist">' \
+#                      '<li>This field is required.</li>' \
+#                      '</ul>' \
+#                      '<input id="id_mnth" name="mnth" type="month" />' \
+#                      '</td>' \
+#                      '</tr>'
 
 
 def test_month_form_field_strval(monthform):
@@ -85,6 +86,18 @@ def test_adminform_topython():
 #         '<input id="id_mnth" name="mnth" type="month" value="2016-07" />' \
 #         '</td>' \
 #         '</tr>'
+
+
+
+def test_m_model(db):
+    a = M.objects.create(
+        month=datetime.date.today()
+    )
+    print("A:", a, type(a.month))
+    assert type(a.month) == ttcal.Month
+    b = M.objects.all()[0]
+    print("B:", b, type(b.month))
+    assert type(b.month) == ttcal.Month
 
 
 def test_create():

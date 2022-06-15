@@ -38,3 +38,6 @@ class S(models.Model):
     
     status = StatusField(S_STATUSDEF, max_length=15,
                          verbose_name='Status', db_index=True, default='first')
+
+    def __str__(self):
+        return f'<class S status:{self.status} type:{type(self.status)})'

@@ -31,10 +31,10 @@ def test_duration_form_field(durationform):
     assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><input id="id_duration" name="duration" type="text" /></td></tr>'''
 
 
-@pytest.mark.skipif(django.VERSION[:2] >= (1, 10), reason="field set to not required for dj19/110 test compatibility")
-def test_duration_form_field_empty(durationform):
-    f = durationform({'duration': u''})
-    assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><ul class="errorlist"><li>This field is required.</li></ul><input id="id_duration" name="duration" type="text" /></td></tr>'''
+# @pytest.mark.skipif(django.VERSION[:2] >= (1, 10), reason="field set to not required for dj19/110 test compatibility")
+# def test_duration_form_field_empty(durationform):
+#     f = durationform({'duration': u''})
+#     assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><ul class="errorlist"><li>This field is required.</li></ul><input id="id_duration" name="duration" type="text" /></td></tr>'''
 
 
 def test_duration_form_field_strval(durationform):

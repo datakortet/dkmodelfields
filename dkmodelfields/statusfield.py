@@ -7,7 +7,7 @@ from django.db import models
 from django.forms import ChoiceField
 from django.utils.translation import ugettext_lazy as _
 from dk.collections import pset
-from .creator import Creator
+from .subclassing import SubfieldBase
 
 
 class StatusValue(object):
@@ -22,17 +22,10 @@ class StatusValue(object):
     def __len__(self):   # needed due to the maxlength validator
         return len(self.name)
 
-    # NOTE: unicode and str must both return the 'value' part of the select
+    # NOTE: str must return the 'value' part of the select
     #       widget, i.e. self.name
-    def __unicode__(self):
-        return self.name
-
     def __str__(self):
         return self.name
-
-    def __set__(self, obj, value):
-        print('ASDAS')
-        self.name = value
 
     def __repr__(self):
         return 'StatusValue(name=%r, verbose=%r, categories=%r)' % (
@@ -175,32 +168,7 @@ class StatusDef(object):
         return [(name, gdict.verbose) for name, gdict in self.status]
 
 
-class StatusFieldCreator(object):
-    """
-    A placeholder class that provides a way to set the attribute on the model.
-    """
-    def __init__(self, field):
-        print("INIT")
-        self.field = field
-
-    def __get__(self, obj, type=None):
-        print("GET")
-        return 42
-        if obj is None:
-            return self
-        return obj.__dict__[self.field.name]
-
-    def __set__(self, obj, value):
-        print("OBJECT", obj)
-        print("VALUE", value)
-        print("TYPEOFSELFFIELD", type(self.field))
-        print("TYPEOBJDICT", obj.__dict__[self.field.name])
-        temp = self.field.to_python(value)
-        print("TEMP", temp, type(temp))
-        # obj.__dict__[self.field.name] = self.field.to_python(value)
-
-
-class StatusField(models.Field, StatusFieldCreator):
+class StatusField(models.Field, metaclass=SubfieldBase):
     """Character status field.
     """
     description = _("Status field")
