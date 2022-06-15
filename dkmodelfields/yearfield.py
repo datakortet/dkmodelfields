@@ -7,10 +7,10 @@ A database field class that goes with ttcal.Year.
 import ttcal
 from django.db import models
 from dkmodelfields.adminforms import YearField as YearFormField
-from .creator import Creator
+from .subclassing import SubfieldBase
 
 
-class YearField(models.Field, Creator):
+class YearField(models.Field, metaclass=SubfieldBase):
     """MySQL YEAR(4) <-> ttcal.Year() mapping.
     """
 
@@ -61,5 +61,7 @@ class YearField(models.Field, Creator):
 
     def value_to_string(self, obj):
         "Serialization."
-        val = self._get_val_from_obj(obj)
+        if obj is None:
+            return ""
+        val = self.value_from_object(obj)
         return self.get_prep_value(val)

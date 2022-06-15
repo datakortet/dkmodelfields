@@ -9,10 +9,10 @@ import ttcal
 from django.db import models
 from django.utils.encoding import smart_str, smart_text
 from dkmodelfields.adminforms import DurationField as DurationFormField
-from .creator import Creator
+from .subclassing import SubfieldBase
 
 
-class DurationField(models.Field, Creator):
+class DurationField(models.Field, metaclass=SubfieldBase):
     """A duration field is used.
     """
     description = "A duration of time"
@@ -100,7 +100,10 @@ class DurationField(models.Field, Creator):
 
     def value_to_string(self, obj):
         "Serialize."
-        value = self._get_val_from_obj(obj)
+        if obj is None:
+            value = ""
+        else:
+            value = self.value_from_object(obj)
         return smart_text(value)
 
     def formfield(self, **kwargs):  # pylint:disable=W0221

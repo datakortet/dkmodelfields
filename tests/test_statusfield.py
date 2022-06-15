@@ -5,6 +5,7 @@ from django.forms import ChoiceField
 
 from dkmodelfields.statusfield import StatusField, StatusValue
 from django.utils.translation import ugettext_lazy as _
+from testapp_dkmodelfields.models import S
 
 
 def test_status_field():
@@ -44,7 +45,6 @@ def test_status_field():
     assert set(sf.get_prep_lookup('in', ['new', 'err'])) == ({'new', 'error'})
     assert set(sf.get_prep_lookup('in', None)) == ({None})
     sv = StatusValue(name='cancelled', verbose='Ordren er kansellert', categories=('done', 'ready'))
-    assert sv.__unicode__() == sv.name
     assert str(sv) == sv.name
     assert repr(sv).startswith('StatusValue(')
 
@@ -72,3 +72,19 @@ def test_status_field():
     )
 
     assert isinstance(sf.formfield(), ChoiceField)
+
+
+def test_s_model(db):
+    b = S()
+    # print("STATUS:NAME:", b.status.name)
+    print("TYPE:", type(b), b)
+    assert isinstance(b.status, StatusValue)
+
+    s = S.objects.create()
+    a = S.objects.get(id=s.id)
+    assert isinstance(a.status, StatusValue)
+
+    print("TYPE:", type(s), s)
+    s.status = 'first'
+    print("TYPE:", type(s), s)
+    assert isinstance(s.status, StatusValue)

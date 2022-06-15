@@ -7,7 +7,7 @@ from django.db import models
 from django.forms import ChoiceField
 from django.utils.translation import ugettext_lazy as _
 from dk.collections import pset
-from .creator import Creator
+from .subclassing import SubfieldBase
 
 
 class StatusValue(object):
@@ -22,11 +22,8 @@ class StatusValue(object):
     def __len__(self):   # needed due to the maxlength validator
         return len(self.name)
 
-    # NOTE: unicode and str must both return the 'value' part of the select
+    # NOTE: str must return the 'value' part of the select
     #       widget, i.e. self.name
-    def __unicode__(self):
-        return self.name
-
     def __str__(self):
         return self.name
 
@@ -171,7 +168,7 @@ class StatusDef(object):
         return [(name, gdict.verbose) for name, gdict in self.status]
 
 
-class StatusField(models.Field, Creator):
+class StatusField(models.Field, metaclass=SubfieldBase):
     """Character status field.
     """
     description = _("Status field")
@@ -182,7 +179,7 @@ class StatusField(models.Field, Creator):
         self.max_length = kw['max_length'] = kw.get('max_length', self.statusdef.namelength)
         super(StatusField, self).__init__(**kw)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
-        
+    
     def deconstruct(self):
         name, path, args, kwargs = super(StatusField, self).deconstruct()
         kwargs['choices'] = self.statusdef.options
@@ -208,6 +205,7 @@ class StatusField(models.Field, Creator):
             if type(value) is bytes:
                 value = str(value, "utf-8")
             if value in self.statusdef.status:
+                print("RETURNING", self.statusdef.status[value], type(self.statusdef.status[value]))
                 return self.statusdef.status[value]
             raise ValueError("Unknown status: %r" % value)
 

@@ -11,7 +11,7 @@ from dkmodelfields import YearField
 from dkmodelfields import adminforms
 import datetime
 
-from testapp.models import Y
+from testapp_dkmodelfields.models import Y
 
 
 @pytest.fixture

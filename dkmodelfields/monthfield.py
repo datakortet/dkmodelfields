@@ -13,7 +13,8 @@ from django.db.models import Transform, IntegerField
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from dkmodelfields.adminforms import MonthField as MonthFormField
-from .creator import Creator
+from dkmodelfields.subclassing import SubfieldBase
+from .subclassing import SubfieldBase
 
 
 class Month2YearTransform(Transform):
@@ -36,7 +37,7 @@ class Month2YearTransform(Transform):
         return '%s(%s)' % (self.function, lhs), lhs_params
 
 
-class MonthField(models.Field, Creator):
+class MonthField(models.Field, metaclass=SubfieldBase):
     """MySQL date <-> ttcal.Month() mapping.
        Maps the month to the first day of the month.
     """
@@ -181,7 +182,9 @@ class MonthField(models.Field, Creator):
     def value_to_string(self, obj):
         """Serialization.
         """
-        val = self._get_val_from_obj(obj)
+        if obj is None:
+            return ""
+        val = self.value_from_object(obj)
         if not val:
             return val
         return '%04d-%02d' % (val.year, val.month)
