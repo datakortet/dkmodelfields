@@ -56,7 +56,7 @@ class DurationField(models.Field, metaclass=SubfieldBase):
             value = ttcal.Duration(seconds=value)
         return value.toint()
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, *args):
         """Converts a value as returned by the database to a Python object.
            It is the reverse of get_prep_value().
         """

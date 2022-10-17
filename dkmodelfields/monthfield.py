@@ -50,7 +50,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
     def db_type(self, connection):
         return 'DATE'
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, *args):
         """Converts a value as returned by the database to a Python object.
            It is the reverse of get_prep_value().
         """
