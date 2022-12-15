@@ -2,6 +2,7 @@
 Admin support code for DurationFields.
 """
 import ttcal
+import django
 from django.forms.fields import Field
 from django.forms import ValidationError
 from django.forms.utils import flatatt
@@ -19,7 +20,12 @@ class DurationInput(TextInput):
         """
         if value is None:
             value = ''
-        final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+            
+        if django.VERSION >= (1, 11):
+            final_attrs = self.build_attrs(attrs, {'type': self.input_type, 'name': name})
+        else:
+            final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+            
         if value != '':
             # Only add the 'value' attribute if a value is non-empty.
             if isinstance(value, int):

@@ -5,16 +5,12 @@
 from __future__ import print_function
 from builtins import str as text
 import ttcal
+import django
 from django.forms.fields import CharField
 from django.forms import ValidationError
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
-try:   # pragma: nocover
-    # 1.8
-    from django.forms.utils import flatatt
-except ImportError:   # pragma: nocover
-    # 1.7
-    from django.forms.util import flatatt
+from django.forms.utils import flatatt
 
 
 class MonthInput(TextInput):
@@ -23,7 +19,12 @@ class MonthInput(TextInput):
     def render(self, name, value, attrs=None):
         if value is None:
             value = u''
-        final_attrs = self.build_attrs(attrs, type='month', name=name)
+            
+        if django.VERSION >= (1, 11):
+            final_attrs = self.build_attrs(attrs, {'type': 'month', 'name': name})
+        else:
+            final_attrs = self.build_attrs(attrs, type='month', name=name)
+            
         if value != u'':
             # if isinstance(value, int):
             #     value = ttcal.Month(value)

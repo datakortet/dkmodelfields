@@ -4,6 +4,7 @@
 """
 
 import ttcal
+import django
 from django.forms.fields import Field
 from django.forms import ValidationError
 from django.forms.utils import flatatt
@@ -18,7 +19,12 @@ class YearInput(TextInput):
     def render(self, name, value, attrs=None):
         if value is None:
             value = u''
-        final_attrs = self.build_attrs(attrs, type='number', name=name)
+            
+        if django.VERSION >= (1, 11):
+            final_attrs = self.build_attrs(attrs, {'type': 'number', 'name': name})
+        else:
+            final_attrs = self.build_attrs(attrs, type='number', name=name)
+        
         if value != u'':
             if isinstance(value, int):
                 value = ttcal.Year(value)
