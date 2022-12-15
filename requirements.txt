@@ -1,6 +1,6 @@
 dk>=1.0.2
-django==1.10.8                 ; python_version >= '3.7'
-django==1.9.13                 ; python_version < '3.7'
+django==1.10.8                 ; python_version < '3.8'
+Django==1.11.29                ; python_version >= '3.8'
 future==0.18.2
 ttcal>=1.0.2
 py==1.11.0

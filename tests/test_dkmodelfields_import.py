@@ -14,6 +14,7 @@ import dkmodelfields.monthfield
 import dkmodelfields.norway
 import dkmodelfields.phonefield
 import dkmodelfields.statusfield
+import dkmodelfields.subclassing
 import dkmodelfields.utils
 import dkmodelfields.yearfield
 
@@ -33,5 +34,6 @@ def test_import_dkmodelfields():
     assert dkmodelfields.norway
     assert dkmodelfields.phonefield
     assert dkmodelfields.statusfield
+    assert dkmodelfields.subclassing
     assert dkmodelfields.utils
     assert dkmodelfields.yearfield
