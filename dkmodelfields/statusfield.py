@@ -206,7 +206,7 @@ class StatusField(models.Field, metaclass=SubfieldBase):
                 value = str(value, "utf-8")
             if value in self.statusdef.status:
                 return self.statusdef.status[value]
-            raise ValueError("Unknown status: %r" % value)
+            raise ValueError(f"Unknown status: {value!r}")
 
         return value
 
@@ -214,7 +214,7 @@ class StatusField(models.Field, metaclass=SubfieldBase):
         return "StatusField"
 
     def db_type(self, connection):
-        return 'VARCHAR(%s)' % self.max_length
+        return f'VARCHAR({self.max_length})'
 
     def get_prep_lookup(self, lookup_type, value):
         """Return a value prepared for database lookup.

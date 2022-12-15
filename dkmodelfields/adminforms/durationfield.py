@@ -35,7 +35,7 @@ class DurationInput(TextInput):
             # Otherwise, we've got a timedelta already
 
             final_attrs['value'] = force_text(value)
-        return mark_safe('<input%s />' % flatatt(final_attrs))
+        return mark_safe(f'<input{flatatt(final_attrs)} />')
 
 
 class DurationField(Field):

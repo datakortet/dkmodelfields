@@ -27,7 +27,7 @@ class YearInput(TextInput):
             if isinstance(value, int):
                 value = ttcal.Year(value)
             final_attrs['value'] = force_text(value)
-        return mark_safe('<input%s />' % flatatt(final_attrs))
+        return mark_safe(f'<input{flatatt(final_attrs)} />')
 
 
 class YearField(Field):
@@ -43,7 +43,7 @@ class YearField(Field):
         try:
             return ttcal.Year(int(value))
         except:  # pragma: nocover
-            raise ValidationError('Invalid year: %r' % value)
+            raise ValidationError(f'Invalid year: {value!r}')
 
     def to_python(self, value):  # pylint:disable=R0201
         """convert value to ttcal.Year().
@@ -51,4 +51,4 @@ class YearField(Field):
         try:
             return ttcal.Year(int(value))
         except:  # pragma: nocover
-            raise ValidationError('Invalid year: %r' % value)
+            raise ValidationError(f'Invalid year: {value!r}')

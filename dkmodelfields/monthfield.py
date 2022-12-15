@@ -34,7 +34,7 @@ class Month2YearTransform(Transform):
 
     def as_sql(self, compiler, connection, function=None, template=None):
         lhs, lhs_params = compiler.compile(self.lhs)
-        return '{}({})'.format(self.function, lhs), lhs_params
+        return f'{self.function}({lhs})', lhs_params
 
 
 class MonthField(models.Field, metaclass=SubfieldBase):
@@ -166,7 +166,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
         if isinstance(value, (bytes, str)):
             return self._str_to_month(value)
 
-        raise ValidationError("Value/month: {!r}, {!r}".format(value, type(value)))
+        raise ValidationError(f"Value/month: {value!r}, {type(value)!r}")
 
     # def get_db_prep_value(self, value, connection, prepared):
     #     return self.to_python(value)

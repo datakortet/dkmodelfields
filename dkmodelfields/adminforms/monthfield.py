@@ -32,7 +32,7 @@ class MonthInput(TextInput):
                 value = ttcal.Month(y, m)
             assert isinstance(value, ttcal.Month), type(value)
             final_attrs['value'] = text(value.format("Y-m"))
-        return mark_safe('<input%s />' % flatatt(final_attrs))
+        return mark_safe(f'<input{flatatt(final_attrs)} />')
 
 
 class MonthField(CharField):
@@ -57,7 +57,7 @@ class MonthField(CharField):
         try:
             return self._str_to_month(value)
         except:  # pragma: nocover
-            raise ValidationError('Invalid month: %r' % value)
+            raise ValidationError(f'Invalid month: {value!r}')
 
     def to_python(self, value):  # pylint:disable=R0201
         """convert value to ttcal.Month().
@@ -65,4 +65,4 @@ class MonthField(CharField):
         try:
             return self._str_to_month(value)
         except:  # pragma: nocover
-            raise ValidationError('Invalid month: %r' % value)
+            raise ValidationError(f'Invalid month: {value!r}')
