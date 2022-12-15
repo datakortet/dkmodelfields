@@ -35,7 +35,7 @@ class DurationInput(TextInput):
             # Otherwise, we've got a timedelta already
 
             final_attrs['value'] = force_text(value)
-        return mark_safe(u'<input%s />' % flatatt(final_attrs))
+        return mark_safe('<input%s />' % flatatt(final_attrs))
 
 
 class DurationField(Field):
@@ -44,12 +44,12 @@ class DurationField(Field):
     widget = DurationInput
 
     def __init__(self, *args, **kwargs):
-        super(DurationField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self, value):
         """Returns a datetime.timedelta object.
         """
-        super(DurationField, self).clean(value)
+        super().clean(value)
         try:
             return ttcal.Duration.parse(value)
         except (ValueError, TypeError):

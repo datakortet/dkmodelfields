@@ -10,7 +10,7 @@ from dk.collections import pset
 from .subclassing import SubfieldBase
 
 
-class StatusValue(object):
+class StatusValue:
     def __init__(self, name=None, verbose=None, categories=()):
         self.name = name.strip()
         self.verbose = verbose.strip()
@@ -28,7 +28,7 @@ class StatusValue(object):
         return self.name
 
     def __repr__(self):
-        return 'StatusValue(name=%r, verbose=%r, categories=%r)' % (
+        return 'StatusValue(name={!r}, verbose={!r}, categories={!r})'.format(
             self.name, self.verbose, self.categories)
 
     def __json__(self):
@@ -39,7 +39,7 @@ class StatusValue(object):
         )
 
 
-class StatusDef(object):
+class StatusDef:
     """Compact way to define status fields, that takes care of most of
        the manual drudgery involved.
 
@@ -79,7 +79,7 @@ class StatusDef(object):
 
     # TODO:  create a custom model field that maps to <select>
 
-    defre = re.compile(u'''
+    defre = re.compile('''
     \\s*(?P<name>[a-z][-a-z0-9]*)\\s*(?P<verbose>[^#]*)\\#\\s*\\[(?P<categories>[^\\]]*)\\]
     ''', re.VERBOSE)
 
@@ -177,11 +177,11 @@ class StatusField(models.Field, metaclass=SubfieldBase):
         self.txt = args[0] if args else ""
         self.statusdef = StatusDef(self.txt)
         self.max_length = kw['max_length'] = kw.get('max_length', self.statusdef.namelength)
-        super(StatusField, self).__init__(**kw)
+        super().__init__(**kw)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
     
     def deconstruct(self):
-        name, path, args, kwargs = super(StatusField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         kwargs['choices'] = self.statusdef.options
         return name, path, [self.txt], kwargs
 
@@ -257,4 +257,4 @@ class StatusField(models.Field, metaclass=SubfieldBase):
             'choices': self.statusdef.options,
         }
         defaults.update(kwargs)
-        return super(StatusField, self).formfield(**defaults)
+        return super().formfield(**defaults)

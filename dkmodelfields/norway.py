@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.core import validators
 from django.db.models.fields import CharField
 from django.utils.translation import ugettext_lazy as _
@@ -14,12 +12,12 @@ class TelefonField(CharField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 8
         self.min_length = 8
-        super(TelefonField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.validators.append(validators.MinLengthValidator(self.min_length))
 
     def deconstruct(self):  # pragma: nocover
         # not strictly necessary
-        name, path, args, kwargs = super(TelefonField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs
 
@@ -31,11 +29,11 @@ class GateField(CharField):
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 50
-        super(GateField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def deconstruct(self):  # pragma: nocover
         # not strictly necessary
-        name, path, args, kwargs = super(GateField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs
 
@@ -49,7 +47,7 @@ class PostnrField(CharField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 4
         self.min_length = 4
-        super(PostnrField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.validators.append(validators.MinLengthValidator(self.min_length))
 
     def formfield(self, **kwargs):
@@ -57,11 +55,11 @@ class PostnrField(CharField):
         from localflavor.no.forms import NOZipCodeField
         defaults = {'form_class': NOZipCodeField}
         defaults.update(kwargs)
-        return super(PostnrField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
     def deconstruct(self):  # pragma: nocover
         # not strictly necessary
-        name, path, args, kwargs = super(PostnrField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs
 
@@ -73,10 +71,10 @@ class PoststedField(CharField):
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 50
-        super(PoststedField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def deconstruct(self):  # pragma: nocover
         # not strictly necessary
-        name, path, args, kwargs = super(PoststedField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         del kwargs['max_length']
         return name, path, args, kwargs

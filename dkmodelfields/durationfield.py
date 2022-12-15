@@ -18,7 +18,7 @@ class DurationField(models.Field, metaclass=SubfieldBase):
     description = "A duration of time"
 
     def __init__(self, *args, **kwargs):
-        super(DurationField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_internal_type(self):
         return "DurationField"
@@ -110,4 +110,4 @@ class DurationField(models.Field, metaclass=SubfieldBase):
         "Formfield declaration for admin site."
         defaults = {'form_class': DurationFormField}
         defaults.update(kwargs)
-        return super(DurationField, self).formfield(**defaults)
+        return super().formfield(**defaults)

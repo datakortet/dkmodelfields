@@ -15,7 +15,7 @@ class YearField(models.Field, metaclass=SubfieldBase):
     """
 
     def __init__(self, *args, **kwargs):
-        super(YearField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def db_type(self, connection):
         return 'YEAR(4)'
@@ -57,7 +57,7 @@ class YearField(models.Field, metaclass=SubfieldBase):
         #print "formfield", kwargs
         defaults = {'form_class': YearFormField}
         defaults.update(kwargs)
-        return super(YearField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
     def value_to_string(self, obj):
         "Serialization."

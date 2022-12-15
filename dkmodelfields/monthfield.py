@@ -34,7 +34,7 @@ class Month2YearTransform(Transform):
 
     def as_sql(self, compiler, connection, function=None, template=None):
         lhs, lhs_params = compiler.compile(self.lhs)
-        return '%s(%s)' % (self.function, lhs), lhs_params
+        return '{}({})'.format(self.function, lhs), lhs_params
 
 
 class MonthField(models.Field, metaclass=SubfieldBase):
@@ -44,7 +44,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
     description = "A generic Month field"
 
     def __init__(self, *args, **kwargs):
-        super(MonthField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.month_year_filter = True
 
     def db_type(self, connection):
@@ -91,7 +91,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
         if lookup_type == 'month':
             return [force_text(value)]
 
-        return super(MonthField, self).get_prep_lookup(lookup_type, value)
+        return super().get_prep_lookup(lookup_type, value)
 
     def get_transform(self, lookup_name):
         """Handles __year filter on month fields.
@@ -146,7 +146,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
 
         if django.VERSION >= (1, 10):
             return value
-        return super(MonthField, self).get_db_prep_lookup(
+        return super().get_db_prep_lookup(
             lookup_type, value, connection=connection, prepared=prepared)
 
     # converts from a database value to a python value
@@ -166,7 +166,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
         if isinstance(value, (bytes, str)):
             return self._str_to_month(value)
 
-        raise ValidationError("Value/month: %r, %r" % (value, type(value)))
+        raise ValidationError("Value/month: {!r}, {!r}".format(value, type(value)))
 
     # def get_db_prep_value(self, value, connection, prepared):
     #     return self.to_python(value)
@@ -194,12 +194,12 @@ class MonthField(models.Field, metaclass=SubfieldBase):
         """
         defaults = {'form_class': MonthFormField}
         defaults.update(kwargs)
-        return super(MonthField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
 
 # for admin..
 class MonthFieldYearSimpleFilter(SimpleListFilter):
-    title = _(u'år')
+    title = _('år')
 
     parameter_name = 'month_year'
 
@@ -212,7 +212,7 @@ class MonthFieldYearSimpleFilter(SimpleListFilter):
         ).values('month')
         choices = [val['month'] for val in months]
         choices = [v for v in choices if v is not None]
-        choices = set(m.year for m in choices)
+        choices = {m.year for m in choices}
         for val in sorted(choices):
             links.append((str(val), val))
         return links

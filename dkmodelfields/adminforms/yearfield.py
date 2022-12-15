@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Admin support code for YearFields.
 """
 
@@ -18,18 +16,18 @@ class YearInput(TextInput):
     """
     def render(self, name, value, attrs=None):
         if value is None:
-            value = u''
+            value = ''
             
         if django.VERSION >= (1, 11):
             final_attrs = self.build_attrs(attrs, {'type': 'number', 'name': name})
         else:
             final_attrs = self.build_attrs(attrs, type='number', name=name)
         
-        if value != u'':
+        if value != '':
             if isinstance(value, int):
                 value = ttcal.Year(value)
             final_attrs['value'] = force_text(value)
-        return mark_safe(u'<input%s />' % flatatt(final_attrs))
+        return mark_safe('<input%s />' % flatatt(final_attrs))
 
 
 class YearField(Field):
@@ -38,10 +36,10 @@ class YearField(Field):
     widget = YearInput
 
     def __init__(self, *args, **kwargs):
-        super(YearField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self, value):
-        super(YearField, self).clean(value)
+        super().clean(value)
         try:
             return ttcal.Year(int(value))
         except:  # pragma: nocover

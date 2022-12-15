@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Forms code for the admin interface for our custom fields.
 """
 

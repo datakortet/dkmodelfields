@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """In its own module to prevent circular dependencies.
 """
 

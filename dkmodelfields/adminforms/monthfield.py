@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-
 """Admin support code for MonthFields.
 """
-from __future__ import print_function
 from builtins import str as text
 import ttcal
 import django
@@ -18,14 +15,14 @@ class MonthInput(TextInput):
     """
     def render(self, name, value, attrs=None):
         if value is None:
-            value = u''
+            value = ''
             
         if django.VERSION >= (1, 11):
             final_attrs = self.build_attrs(attrs, {'type': 'month', 'name': name})
         else:
             final_attrs = self.build_attrs(attrs, type='month', name=name)
             
-        if value != u'':
+        if value != '':
             # if isinstance(value, int):
             #     value = ttcal.Month(value)
             if isinstance(value, text):
@@ -35,7 +32,7 @@ class MonthInput(TextInput):
                 value = ttcal.Month(y, m)
             assert isinstance(value, ttcal.Month), type(value)
             final_attrs['value'] = text(value.format("Y-m"))
-        return mark_safe(u'<input%s />' % flatatt(final_attrs))
+        return mark_safe('<input%s />' % flatatt(final_attrs))
 
 
 class MonthField(CharField):
@@ -44,7 +41,7 @@ class MonthField(CharField):
     widget = MonthInput
 
     def __init__(self, *args, **kwargs):
-        super(MonthField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _str_to_month(self, sval):  # pylint:disable=R0201
         # type: (str) -> ttcal.Month
@@ -56,7 +53,7 @@ class MonthField(CharField):
         return ttcal.Month.parse(sval)
 
     def clean(self, value):
-        super(MonthField, self).clean(value)
+        super().clean(value)
         try:
             return self._str_to_month(value)
         except:  # pragma: nocover
