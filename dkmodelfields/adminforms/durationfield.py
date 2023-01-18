@@ -14,7 +14,7 @@ from django.utils.encoding import force_text
 class DurationInput(TextInput):
     """Duration input widget.
     """
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         """output.append(u'<li>%(cb)s<label%(for)s>%(label)s</label></li>' %
            {"for": label_for, "label": option_label, "cb": rendered_cb})
         """
@@ -52,13 +52,13 @@ class DurationField(Field):
         super().clean(value)
         try:
             return ttcal.Duration.parse(value)
-        except (ValueError, TypeError):
-            raise ValidationError('Enter a valid duration.')
+        except (ValueError, TypeError) as e:
+            raise ValidationError('Enter a valid duration.') from e
 
-    def to_python(self, value):  # pylint:disable=R0201
+    def to_python(self, value):    # pylint:disable=R0201
         """Convert form input to python value.
         """
         try:
             return ttcal.Duration.parse(value)
-        except (ValueError, TypeError):
-            raise ValidationError('Enter a valid duration.')
+        except (ValueError, TypeError) as e:
+            raise ValidationError('Enter a valid duration.') from e

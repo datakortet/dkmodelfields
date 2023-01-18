@@ -14,7 +14,7 @@ from django.utils.encoding import force_text
 class YearInput(TextInput):
     """Year input widget.
     """
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ''
             

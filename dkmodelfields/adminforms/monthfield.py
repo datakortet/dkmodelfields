@@ -13,7 +13,7 @@ from django.forms.utils import flatatt
 class MonthInput(TextInput):
     """Month input widget.
     """
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ''
             
@@ -48,9 +48,7 @@ class MonthField(CharField):
         # 2008-01
         if not isinstance(sval, str):
             print("NOT ISINSTANCE:", repr(sval))
-        if not sval.strip():
-            return None
-        return ttcal.Month.parse(sval)
+        return ttcal.Month.parse(sval) if sval.strip() else None
 
     def clean(self, value):
         super().clean(value)
