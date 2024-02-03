@@ -13,6 +13,7 @@ from dkmodelfields import MonthField
 from dkmodelfields import adminforms
 from dkmodelfields.monthfield import MonthFieldYearSimpleFilter
 from testapp_dkmodelfields.models import M, AM
+from .page import Page
 
 
 @pytest.fixture
@@ -226,4 +227,18 @@ def test_month_field_year_simple_filter(db):
                               rf.get('/?month_year=2017-01'), M.objects.all()
                           ).all()
                          ]
+
+
+def test_subfieldbase(db):
+    M.objects.all().delete()
+    ttcal_jan = ttcal.Month(2017, 1)
+    M.objects.create(month=ttcal_jan)
+    assert M.objects.get(month=ttcal_jan).month == ttcal_jan
+    jan = M.objects.get(month=ttcal_jan)
+    rf = RequestFactory()
+    page = Page(rf.get('/'))
+    page.jan = jan
+    # import pprint
+    # pprint.pprint(page.viewstate())
+    assert page.viewstate()['jan'] == jan
 
