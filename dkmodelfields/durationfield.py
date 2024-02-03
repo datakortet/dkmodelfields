@@ -3,12 +3,13 @@ Based on https://github.com/johnpaulett/django-durationfield.
 """
 # pylint:disable=R0904
 import datetime
-import sys
 
-import ttcal
 from django.db import models
 from django.utils.encoding import smart_str, smart_text
-from dkmodelfields.adminforms import DurationField as DurationFormField
+
+import ttcal
+
+from .adminforms import DurationField as DurationFormField
 from .subclassing import SubfieldBase
 
 
@@ -82,19 +83,15 @@ class DurationField(models.Field, metaclass=SubfieldBase):
         if isinstance(value, int):
             return ttcal.Duration(seconds=value)
 
-        if sys.version_info < (3,) and isinstance(value, long):  # pragma: nocover
-            return ttcal.Duration(seconds=value)
-
         # Try to parse the value
         str_val = smart_str(value)
         if isinstance(str_val, str):
             try:
                 return ttcal.Duration.parse(str_val)
-            except ValueError:  # pragma: nocover
+            except ValueError as e:  # pragma: nocover
                 raise ValueError(
-                    "This value must be in 'w d h min s ms us' format, not:" +
-                    repr(value)
-                )
+                    f"This value must be in 'w d h min s ms us' format, not: {value!r}" 
+                ) from e
 
         raise ValueError("The value's type could not be converted")  # pragma: nocover
 

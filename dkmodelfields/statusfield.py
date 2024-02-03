@@ -28,7 +28,7 @@ class StatusValue:
         return self.name
 
     def __repr__(self):
-        return 'StatusValue(name={!r}, verbose={!r}, categories={!r})'.format(
+        return 'StatusValue(name={!r}, verbose={!r}, categories={!r})'.format(  # pylint:disable=C0209
             self.name, self.verbose, self.categories)
 
     def __json__(self):
@@ -84,7 +84,7 @@ class StatusDef:
     ''', re.VERBOSE)
 
     # noinspection PyMethodMayBeStatic
-    def _parse(self, txt):  # pylint:disable=R0201
+    def _parse(self, txt):
         lines = [line for line in txt.split('\n') if line.strip()]
         defs = pset()
 
@@ -202,7 +202,7 @@ class StatusField(models.Field, metaclass=SubfieldBase):
             return value
 
         if isinstance(value, (bytes, text)):
-            if type(value) is bytes:
+            if isinstance(value, bytes):
                 value = str(value, "utf-8")
             if value in self.statusdef.status:
                 return self.statusdef.status[value]
@@ -236,10 +236,11 @@ class StatusField(models.Field, metaclass=SubfieldBase):
                         res.add(v)
             res = [self.get_prep_value(v) for v in res]
             return res
-        elif lookup_type == 'exact':
+        
+        if lookup_type == 'exact':
             return value
-        else:
-            return value
+
+        return value
 
     def get_prep_value(self, value):
         """Convert to a value useable as a parameter in a query.

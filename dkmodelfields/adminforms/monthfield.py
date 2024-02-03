@@ -1,13 +1,14 @@
 """Admin support code for MonthFields.
 """
 from builtins import str as text
-import ttcal
-import django
+
 from django.forms.fields import CharField
 from django.forms import ValidationError
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
 from django.forms.utils import flatatt
+
+import ttcal
 
 
 class MonthInput(TextInput):
@@ -17,10 +18,7 @@ class MonthInput(TextInput):
         if value is None:
             value = ''
             
-        if django.VERSION >= (1, 11):
-            final_attrs = self.build_attrs(attrs, {'type': 'month', 'name': name})
-        else:
-            final_attrs = self.build_attrs(attrs, type='month', name=name)
+        final_attrs = self.build_attrs(attrs, {'type': 'month', 'name': name})
             
         if value != '':
             # if isinstance(value, int):
@@ -43,7 +41,7 @@ class MonthField(CharField):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _str_to_month(self, sval):  # pylint:disable=R0201
+    def _str_to_month(self, sval):
         # type: (str) -> ttcal.Month
         # 2008-01
         if not isinstance(sval, str):
@@ -54,13 +52,13 @@ class MonthField(CharField):
         super().clean(value)
         try:
             return self._str_to_month(value)
-        except:  # pragma: nocover
-            raise ValidationError(f'Invalid month: {value!r}')
+        except:  # pragma: nocover  # noqa
+            raise ValidationError(f'Invalid month: {value!r}')   # pylint:disable=W0707
 
-    def to_python(self, value):  # pylint:disable=R0201
+    def to_python(self, value):
         """convert value to ttcal.Month().
         """
         try:
             return self._str_to_month(value)
-        except:  # pragma: nocover
-            raise ValidationError(f'Invalid month: {value!r}')
+        except:  # pragma: nocover # noqa
+            raise ValidationError(f'Invalid month: {value!r}')   # pylint:disable=W0707

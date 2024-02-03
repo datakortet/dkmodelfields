@@ -12,8 +12,8 @@ class SubfieldBase(type):
     A metaclass for custom Field subclasses. This ensures the model's attribute
     has the descriptor protocol attached to it.
     """
-    def __new__(cls, name, bases, attrs):
-        new_class = super().__new__(cls, name, bases, attrs)
+    def __new__(mcs, name, bases, attrs):
+        new_class = super().__new__(mcs, name, bases, attrs)
         new_class.contribute_to_class = make_contrib(
             new_class, attrs.get('contribute_to_class')
         )

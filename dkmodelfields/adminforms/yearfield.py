@@ -1,14 +1,13 @@
 """Admin support code for YearFields.
 """
-
-import ttcal
-import django
 from django.forms.fields import Field
 from django.forms import ValidationError
 from django.forms.utils import flatatt
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_text
+
+import ttcal
 
 
 class YearInput(TextInput):
@@ -18,10 +17,7 @@ class YearInput(TextInput):
         if value is None:
             value = ''
             
-        if django.VERSION >= (1, 11):
-            final_attrs = self.build_attrs(attrs, {'type': 'number', 'name': name})
-        else:
-            final_attrs = self.build_attrs(attrs, type='number', name=name)
+        final_attrs = self.build_attrs(attrs, {'type': 'number', 'name': name})
         
         if value != '':
             if isinstance(value, int):
@@ -42,13 +38,13 @@ class YearField(Field):
         super().clean(value)
         try:
             return ttcal.Year(int(value))
-        except:  # pragma: nocover
-            raise ValidationError(f'Invalid year: {value!r}')
+        except:  # pragma: nocover  # noqa
+            raise ValidationError(f'Invalid year: {value!r}')  # pylint:disable=W0707
 
-    def to_python(self, value):  # pylint:disable=R0201
+    def to_python(self, value):
         """convert value to ttcal.Year().
         """
         try:
             return ttcal.Year(int(value))
-        except:  # pragma: nocover
-            raise ValidationError(f'Invalid year: {value!r}')
+        except:  # pragma: nocover  # noqa
+            raise ValidationError(f'Invalid year: {value!r}')  # pylint:disable=W0707

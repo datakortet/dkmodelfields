@@ -1,14 +1,14 @@
 """
 Admin support code for DurationFields.
 """
-import ttcal
-import django
 from django.forms.fields import Field
 from django.forms import ValidationError
 from django.forms.utils import flatatt
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_text
+
+import ttcal
 
 
 class DurationInput(TextInput):
@@ -21,10 +21,7 @@ class DurationInput(TextInput):
         if value is None:
             value = ''
             
-        if django.VERSION >= (1, 11):
-            final_attrs = self.build_attrs(attrs, {'type': self.input_type, 'name': name})
-        else:
-            final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+        final_attrs = self.build_attrs(attrs, {'type': self.input_type, 'name': name})
             
         if value != '':
             # Only add the 'value' attribute if a value is non-empty.
@@ -55,7 +52,7 @@ class DurationField(Field):
         except (ValueError, TypeError) as e:
             raise ValidationError('Enter a valid duration.') from e
 
-    def to_python(self, value):    # pylint:disable=R0201
+    def to_python(self, value):
         """Convert form input to python value.
         """
         try:

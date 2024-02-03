@@ -1,12 +1,12 @@
 """
 A database field class that goes with ttcal.Year.
 """
-
 # pylint:disable=R0904
+from django.db import models
 
 import ttcal
-from django.db import models
-from dkmodelfields.adminforms import YearField as YearFormField
+
+from .adminforms import YearField as YearFormField
 from .subclassing import SubfieldBase
 
 
@@ -54,7 +54,7 @@ class YearField(models.Field, metaclass=SubfieldBase):
         return value
 
     def formfield(self, **kwargs):
-        #print "formfield", kwargs
+        # print "formfield", kwargs
         defaults = {'form_class': YearFormField}
         defaults.update(kwargs)
         return super().formfield(**defaults)

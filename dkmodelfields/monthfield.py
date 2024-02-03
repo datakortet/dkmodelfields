@@ -1,19 +1,19 @@
 """
 A database field class that goes with ttcal.Year.
 """
-
+# pylint:disable=C0209
 import datetime
 
-import django
-import ttcal
 from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
 from django.db import models, connection as cn
 from django.db.models import Transform, IntegerField
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
-from dkmodelfields.adminforms import MonthField as MonthFormField
-from dkmodelfields.subclassing import SubfieldBase
+
+import ttcal
+
+from .adminforms import MonthField as MonthFormField
 from .subclassing import SubfieldBase
 
 
@@ -82,9 +82,10 @@ class MonthField(models.Field, metaclass=SubfieldBase):
             else:
                 try:
                     value = int(value)
-                except ValueError:
+                except ValueError as e:
                     raise ValueError(
-                        "The __year lookup type requires an integer argument")
+                        "The __year lookup type requires an integer argument"
+                    ) from e
 
             return cn.ops.year_lookup_bounds_for_date_field(value)
 
@@ -134,20 +135,17 @@ class MonthField(models.Field, metaclass=SubfieldBase):
                         date = datetime.datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
                         value = date.year
                 value = int(value)
-            except TypeError:
+            except TypeError as e:
                 raise ValueError(
-                    "The __year lookup type does not understand " + repr(value)
-                )
+                    "The __year lookup type does not understand {value!r}"
+                ) from e
 
             return connection.ops.year_lookup_bounds_for_date_field(value)
 
         if lookup_type == 'month':
             return [force_text(value)]
 
-        if django.VERSION >= (1, 10):
-            return value
-        return super().get_db_prep_lookup(
-            lookup_type, value, connection=connection, prepared=prepared)
+        return value
 
     # converts from a database value to a python value
     def to_python(self, value):
@@ -171,7 +169,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
     # def get_db_prep_value(self, value, connection, prepared):
     #     return self.to_python(value)
 
-    def _str_to_month(self, sval):  # pylint:disable=R0201
+    def _str_to_month(self, sval):
         # 2008-01
         if not sval.strip():
             return None  # pragma: nocover
