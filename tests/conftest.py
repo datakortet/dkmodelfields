@@ -15,6 +15,7 @@ def pytest_configure():
         DEBUG=True,
         TESTING=True,
         APPNAME='dkmodelfields',
+        SECRET_KEY='test',
         DATABASES={
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
