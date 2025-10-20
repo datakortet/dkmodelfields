@@ -4,7 +4,7 @@ from django.db import connection
 from django.forms import ChoiceField
 
 from dkmodelfields.statusfield import StatusField, StatusValue
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from testapp_dkmodelfields.models import S
 
 

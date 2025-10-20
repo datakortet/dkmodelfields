@@ -3,7 +3,7 @@ import pytest
 from django.core.exceptions import ValidationError
 
 from dkmodelfields import TelefonField, GateField, PostnrField, PoststedField
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 # TELEFON FIELD ####

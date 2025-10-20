@@ -5,7 +5,7 @@ from builtins import str as text
 from django.core import validators
 from django.db import models
 from django.forms import ChoiceField
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from dk.collections import pset
 from .subclassing import SubfieldBase
 
