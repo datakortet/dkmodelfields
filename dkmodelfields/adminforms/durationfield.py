@@ -20,9 +20,11 @@ class DurationInput(TextInput):
         """
         if value is None:
             value = ''
-            
-        final_attrs = self.build_attrs(attrs, {'type': self.input_type, 'name': name})
-            
+
+        final_attrs = self.build_attrs(
+            attrs, {'type': self.input_type, 'name': name}
+        )
+
         if value != '':
             # Only add the 'value' attribute if a value is non-empty.
             if isinstance(value, int):

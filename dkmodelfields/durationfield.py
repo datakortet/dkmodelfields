@@ -90,10 +90,12 @@ class DurationField(models.Field, metaclass=SubfieldBase):
                 return ttcal.Duration.parse(str_val)
             except ValueError as e:  # pragma: nocover
                 raise ValueError(
-                    f"This value must be in 'w d h min s ms us' format, not: {value!r}" 
+                    f"This value must be in 'w d h min s ms us' format, "
+                    f"not: {value!r}"
                 ) from e
 
-        raise ValueError("The value's type could not be converted")  # pragma: nocover
+        msg = "The value's type could not be converted"  # pragma: nocover
+        raise ValueError(msg)
 
     def value_to_string(self, obj):
         "Serialize."

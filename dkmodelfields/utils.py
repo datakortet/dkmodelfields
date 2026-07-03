@@ -40,7 +40,9 @@ def xstr_to_timedelta(td_str):
         )?
         """, re.VERBOSE)
     time_matches = time_matcher.match(td_str)
-    time_groups = {k: int(v or '0') for k, v in time_matches.groupdict().items()}
+    time_groups = {
+        k: int(v or '0') for k, v in time_matches.groupdict().items()
+    }
     time_groups["days"] += time_groups["weeks"] * 7
 
     res = timedelta(
@@ -48,6 +50,7 @@ def xstr_to_timedelta(td_str):
         hours=time_groups["hours"],
         minutes=time_groups["minutes"],
         seconds=time_groups["seconds"],
-        microseconds=time_groups["microseconds"])
+        microseconds=time_groups["microseconds"],
+    )
 
     return res

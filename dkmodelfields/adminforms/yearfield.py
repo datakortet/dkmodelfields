@@ -16,9 +16,11 @@ class YearInput(TextInput):
     def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ''
-            
-        final_attrs = self.build_attrs(attrs, {'type': 'number', 'name': name})
-        
+
+        final_attrs = self.build_attrs(
+            attrs, {'type': 'number', 'name': name}
+        )
+
         if value != '':
             if isinstance(value, int):
                 value = ttcal.Year(value)
@@ -39,7 +41,8 @@ class YearField(Field):
         try:
             return ttcal.Year(int(value))
         except:  # pragma: nocover  # noqa
-            raise ValidationError(f'Invalid year: {value!r}')  # pylint:disable=W0707
+            msg = f'Invalid year: {value!r}'
+            raise ValidationError(msg)  # pylint:disable=W0707
 
     def to_python(self, value):
         """convert value to ttcal.Year().
@@ -47,4 +50,5 @@ class YearField(Field):
         try:
             return ttcal.Year(int(value))
         except:  # pragma: nocover  # noqa
-            raise ValidationError(f'Invalid year: {value!r}')  # pylint:disable=W0707
+            msg = f'Invalid year: {value!r}'
+            raise ValidationError(msg)  # pylint:disable=W0707

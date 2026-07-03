@@ -17,9 +17,11 @@ class MonthInput(TextInput):
     def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ''
-            
-        final_attrs = self.build_attrs(attrs, {'type': 'month', 'name': name})
-            
+
+        final_attrs = self.build_attrs(
+            attrs, {'type': 'month', 'name': name}
+        )
+
         if value != '':
             # if isinstance(value, int):
             #     value = ttcal.Month(value)
@@ -53,7 +55,8 @@ class MonthField(CharField):
         try:
             return self._str_to_month(value)
         except:  # pragma: nocover  # noqa
-            raise ValidationError(f'Invalid month: {value!r}')   # pylint:disable=W0707
+            msg = f'Invalid month: {value!r}'
+            raise ValidationError(msg)  # pylint:disable=W0707
 
     def to_python(self, value):
         """convert value to ttcal.Month().
@@ -61,4 +64,5 @@ class MonthField(CharField):
         try:
             return self._str_to_month(value)
         except:  # pragma: nocover # noqa
-            raise ValidationError(f'Invalid month: {value!r}')   # pylint:disable=W0707
+            msg = f'Invalid month: {value!r}'
+            raise ValidationError(msg)  # pylint:disable=W0707

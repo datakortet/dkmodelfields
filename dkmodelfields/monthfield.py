@@ -120,7 +120,9 @@ class MonthField(models.Field, metaclass=SubfieldBase):
 
         return value  # pragma: nocover
 
-    def get_db_prep_lookup(self, lookup_type, value, connection, prepared=False):
+    def get_db_prep_lookup(
+        self, lookup_type, value, connection, prepared=False
+    ):
         """Return value prepared for database lookup.
         """
         if lookup_type == 'year':
@@ -132,7 +134,8 @@ class MonthField(models.Field, metaclass=SubfieldBase):
                     if isinstance(v, datetime.date):
                         value = v.year
                     else:
-                        date = datetime.datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
+                        date_fmt = "%Y-%m-%d %H:%M:%S"
+                        date = datetime.datetime.strptime(v, date_fmt)
                         value = date.year
                 value = int(value)
             except TypeError as e:
@@ -150,7 +153,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
     # converts from a database value to a python value
     def to_python(self, value):
         """Converts the input ``value`` into a ttcal.Month instance,
-           raising ValueError if the data can't be converted. 
+           raising ValueError if the data can't be converted.
         """
         if not value:
             return None
@@ -176,7 +179,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
         y = int(sval[:4])
         m = int(sval[5:7])
         return ttcal.Month(y, m)
-        
+
     def value_to_string(self, obj):
         """Serialization.
         """

@@ -28,8 +28,12 @@ class StatusValue:
         return self.name
 
     def __repr__(self):
-        return 'StatusValue(name={!r}, verbose={!r}, categories={!r})'.format(  # pylint:disable=C0209
-            self.name, self.verbose, self.categories)
+        return (
+            'StatusValue(name={!r}, verbose={!r}, '
+            'categories={!r})'.format(  # pylint:disable=C0209
+                self.name, self.verbose, self.categories
+            )
+        )
 
     def __json__(self):
         return dict(
@@ -176,10 +180,12 @@ class StatusField(models.Field, metaclass=SubfieldBase):
     def __init__(self, *args, **kw):
         self.txt = args[0] if args else ""
         self.statusdef = StatusDef(self.txt)
-        self.max_length = kw['max_length'] = kw.get('max_length', self.statusdef.namelength)
+        self.max_length = kw['max_length'] = kw.get(
+            'max_length', self.statusdef.namelength
+        )
         super().__init__(**kw)
         self.validators.append(validators.MaxLengthValidator(self.max_length))
-    
+
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
         kwargs['choices'] = self.statusdef.options
@@ -236,7 +242,7 @@ class StatusField(models.Field, metaclass=SubfieldBase):
                         res.add(v)
             res = [self.get_prep_value(v) for v in res]
             return res
-        
+
         if lookup_type == 'exact':
             return value
 

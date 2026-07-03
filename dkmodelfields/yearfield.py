@@ -29,7 +29,7 @@ class YearField(models.Field, metaclass=SubfieldBase):
     def to_python(self, value):
         if not value:
             return None
-        
+
         if isinstance(value, int):
             return ttcal.Year(value)
 
