@@ -6,7 +6,7 @@
 
 import io, setuptools
 
-version = '1.0.1'
+version = '1.0.2'
 
 classifiers = """\
 Development Status :: 3 - Alpha
