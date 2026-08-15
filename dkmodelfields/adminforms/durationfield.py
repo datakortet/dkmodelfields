@@ -6,7 +6,7 @@ from django.forms import ValidationError
 from django.forms.utils import flatatt
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 import ttcal
 
@@ -33,7 +33,7 @@ class DurationInput(TextInput):
 
             # Otherwise, we've got a timedelta already
 
-            final_attrs['value'] = force_text(value)
+            final_attrs['value'] = force_str(value)
         return mark_safe(f'<input{flatatt(final_attrs)} />')
 
 

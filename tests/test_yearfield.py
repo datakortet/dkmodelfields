@@ -11,6 +11,7 @@ from dkmodelfields import adminforms
 import datetime
 
 from testapp_dkmodelfields.models import Y
+from .conftest import assert_html
 
 
 @pytest.fixture
@@ -27,41 +28,20 @@ def test_formfield():
 
 def test_year_form_field(yearform):
     f = yearform()
-    assert str(f) == \
-        '<tr>' \
-        '<th>' \
-        '<label for="id_yr">Year:</label>' \
-        '</th>' \
-        '<td>' \
-        '<input id="id_yr" name="yr" type="number" />' \
-        '</td>' \
-        '</tr>'
+    assert_html(str(f['yr']),
+                '<input type="number" name="yr" id="id_yr">')
 
 
 def test_year_form_str(yearform):
     f = yearform({'yr': u'2016'})
-    assert str(f) == \
-        '<tr>' \
-        '<th>' \
-        '<label for="id_yr">Year:</label>' \
-        '</th>' \
-        '<td>' \
-        '<input id="id_yr" name="yr" type="number" value="2016" />' \
-        '</td>' \
-        '</tr>'
+    assert_html(str(f['yr']),
+                '<input type="number" name="yr" id="id_yr" value="2016">')
 
 
 def test_year_form_int(yearform):
     f = yearform({'yr': 2016})
-    assert str(f) == \
-        '<tr>' \
-        '<th>' \
-        '<label for="id_yr">Year:</label>' \
-        '</th>' \
-        '<td>' \
-        '<input id="id_yr" name="yr" type="number" value="2016" />' \
-        '</td>' \
-        '</tr>'
+    assert_html(str(f['yr']),
+                '<input type="number" name="yr" id="id_yr" value="2016">')
 
 
 def test_create():

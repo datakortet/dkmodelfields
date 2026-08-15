@@ -8,7 +8,7 @@ from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
 from django.db import models, connection as cn
 from django.db.models import Transform, IntegerField
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 
 import ttcal
@@ -90,7 +90,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
             return cn.ops.year_lookup_bounds_for_date_field(value)
 
         if lookup_type == 'month':
-            return [force_text(value)]
+            return [force_str(value)]
 
         return super().get_prep_lookup(lookup_type, value)
 
@@ -146,7 +146,7 @@ class MonthField(models.Field, metaclass=SubfieldBase):
             return connection.ops.year_lookup_bounds_for_date_field(value)
 
         if lookup_type == 'month':
-            return [force_text(value)]
+            return [force_str(value)]
 
         return value
 

@@ -7,6 +7,18 @@ import sys
 DIRNAME=os.path.dirname(__file__)
 
 
+def assert_html(actual, expected):
+    """Compare html semantically.
+
+       Insensitive to whitespace, attribute order, and void element
+       spelling (``<input>`` vs. ``<input />``), all of which change
+       between Django versions.
+    """
+    __tracebackhide__ = True
+    from django.test.html import parse_html
+    assert parse_html(actual) == parse_html(expected)
+
+
 def pytest_configure():
     sys.path.append(DIRNAME)
     from django.conf import settings

@@ -13,6 +13,7 @@ from dkmodelfields import MonthField
 from dkmodelfields import adminforms
 from dkmodelfields.monthfield import MonthFieldYearSimpleFilter
 from testapp_dkmodelfields.models import M, AM
+from .conftest import assert_html
 from .page import Page
 
 
@@ -31,14 +32,8 @@ def test_formfield():
 
 def test_month_form_field(monthform):
     f = monthform()
-    assert str(f) == '<tr>' \
-                     '<th>' \
-                     '<label for="id_mnth">Month:</label>' \
-                     '</th>' \
-                     '<td>' \
-                     '<input id="id_mnth" name="mnth" type="month" />' \
-                     '</td>' \
-                     '</tr>'
+    assert_html(str(f['mnth']),
+                '<input type="month" name="mnth" id="id_mnth">')
 
 
 # @pytest.mark.skipif(django.VERSION[:2] >= (1, 10), reason="field set to not required for dj19/110 test compatibility")
@@ -59,15 +54,10 @@ def test_month_form_field(monthform):
 
 def test_month_form_field_strval(monthform):
     f = monthform({'mnth': u'2016-07'})
-    assert str(f) == \
-        '<tr>' \
-        '<th>' \
-        '<label for="id_mnth">Month:</label>' \
-        '</th>' \
-        '<td>' \
-        '<input id="id_mnth" name="mnth" type="month" value="2016-07" />' \
-        '</td>' \
-        '</tr>'
+    assert_html(
+        str(f['mnth']),
+        '<input type="month" name="mnth" id="id_mnth" value="2016-07">'
+    )
 
 
 def test_adminform_topython():

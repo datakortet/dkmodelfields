@@ -5,7 +5,7 @@ Based on https://github.com/johnpaulett/django-durationfield.
 import datetime
 
 from django.db import models
-from django.utils.encoding import smart_str, smart_text
+from django.utils.encoding import smart_str
 
 import ttcal
 
@@ -103,7 +103,7 @@ class DurationField(models.Field, metaclass=SubfieldBase):
             value = ""
         else:
             value = self.value_from_object(obj)
-        return smart_text(value)
+        return smart_str(value)
 
     def formfield(self, **kwargs):  # pylint:disable=W0221
         "Formfield declaration for admin site."

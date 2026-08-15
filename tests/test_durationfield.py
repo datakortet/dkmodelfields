@@ -11,6 +11,7 @@ from django.forms import Form
 from ttcal import Duration
 from dkmodelfields import DurationField
 from dkmodelfields import adminforms
+from .conftest import assert_html
 
 
 @pytest.fixture
@@ -28,7 +29,8 @@ def test_formfield1():
 
 def test_duration_form_field(durationform):
     f = durationform()
-    assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><input id="id_duration" name="duration" type="text" /></td></tr>'''
+    assert_html(str(f['duration']),
+                '<input type="text" name="duration" id="id_duration">')
 
 
 # @pytest.mark.skipif(django.VERSION[:2] >= (1, 10), reason="field set to not required for dj19/110 test compatibility")
@@ -39,12 +41,15 @@ def test_duration_form_field(durationform):
 
 def test_duration_form_field_strval(durationform):
     f = durationform({'duration': u'2:20:00'})
-    assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><input id="id_duration" name="duration" type="text" value="2:20:00" /></td></tr>'''
+    assert_html(
+        str(f['duration']),
+        '<input type="text" name="duration" id="id_duration" value="2:20:00">'
+    )
 
 
 def test_duration_form_field_duration_val(durationform):
     f = durationform({'duration': ttcal.Duration.parse(u'2:20:00')})
-    assert str(f) == '''<tr><th><label for="id_duration">Duration:</label></th><td><ul class="errorlist"><li>Enter a valid duration.</li></ul><input id="id_duration" name="duration" type="text" /></td></tr>'''
+    assert f.errors == {'duration': ['Enter a valid duration.']}
 
 
 def test_duration_form_field_invalid(durationform):
