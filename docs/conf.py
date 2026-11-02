@@ -18,6 +18,14 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+# Sphinx >= 9 autodoc repr()s lazy-translated class attributes, which needs
+# Django settings to be configured.
+import django
+from django.conf import settings
+if not settings.configured:
+    settings.configure()
+    django.setup()
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
